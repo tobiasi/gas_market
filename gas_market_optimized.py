@@ -427,15 +427,21 @@ df_tot.columns = tot_cols_mm
 
 Actuals = df_ind.merge(df_gtp, left_index=True, right_index=True, how="outer").merge(df_ldz, left_index=True, right_index=True, how="outer").merge(df_tot, left_index=True, right_index=True, how="outer")
 
-ldz_DD = df_ldz.drop(columns=['Benchmark'], axis=1).sub(df_ldz['Benchmark'], axis=0)
-ind_DD = df_ind.drop(columns=['Benchmark'], axis=1).sub(df_ind['Benchmark'], axis=0)
-gtp_DD = df_gtp.drop(columns=['Benchmark'], axis=1).sub(df_gtp['Benchmark'], axis=0)
-tot_DD = df_tot.drop(columns=['Benchmark'], axis=1).sub(df_tot['Benchmark'], axis=0)
+# Fix: Use proper MultiIndex column references for Benchmark
+ldz_benchmark_col = ('LDZ Benchmark', '2026')
+ind_benchmark_col = ('Industrial Benchmark', '2026')
+gtp_benchmark_col = ('Gas-to-Power Benchmark', '2026')
+tot_benchmark_col = ('Total Benchmark', '2026')
 
-ldz_DD_perc = ldz_DD.div(df_ldz['Benchmark'], axis=0)
-ind_DD_perc = ind_DD.div(df_ind['Benchmark'], axis=0)
-gtp_DD_perc = gtp_DD.div(df_gtp['Benchmark'], axis=0)
-tot_DD_perc = tot_DD.div(df_tot['Benchmark'], axis=0)
+ldz_DD = df_ldz.drop(columns=[ldz_benchmark_col, ('LDZ Max', '2026'), ('LDZ Min', '2026')], axis=1).sub(df_ldz[ldz_benchmark_col], axis=0)
+ind_DD = df_ind.drop(columns=[ind_benchmark_col, ('Industrial Max', '2026'), ('Industrial Min', '2026')], axis=1).sub(df_ind[ind_benchmark_col], axis=0)
+gtp_DD = df_gtp.drop(columns=[gtp_benchmark_col, ('Gas-to-Power Max', '2026'), ('Gas-to-Power Min', '2026')], axis=1).sub(df_gtp[gtp_benchmark_col], axis=0)
+tot_DD = df_tot.drop(columns=[tot_benchmark_col, ('Total Max', '2026'), ('Total Min', '2026')], axis=1).sub(df_tot[tot_benchmark_col], axis=0)
+
+ldz_DD_perc = ldz_DD.div(df_ldz[ldz_benchmark_col], axis=0)
+ind_DD_perc = ind_DD.div(df_ind[ind_benchmark_col], axis=0)
+gtp_DD_perc = gtp_DD.div(df_gtp[gtp_benchmark_col], axis=0)
+tot_DD_perc = tot_DD.div(df_tot[tot_benchmark_col], axis=0)
 
 ldz_DD.columns = ldz_cols
 ind_DD.columns = ind_cols
