@@ -125,13 +125,13 @@ ind_cols_1 = (gtp.columns.get_level_values(0)=='Intermediate Calculation') & (gt
 ind_cols_2 = (gtp.columns.get_level_values(0)=='Demand') & (gtp.columns.get_level_values(1)=='Netherlands') & (gtp.columns.get_level_values(2)=='Gas-to-Power (calculated to 30/6/22 then actual)')
 
 for ii in range(len(index)):
-    if gtp.iloc[ii, ind_cols].iloc[0] == 0:
-        if gtp.iloc[ii, ind_cols_1].iloc[0] > 0:
-            gtp.iloc[ii, ind_cols_2] = gtp.iloc[ii, ind_cols_1].iloc[0]
+    if gtp.iloc[ii, ind_cols][0] == 0:
+        if gtp.iloc[ii, ind_cols_1][0] > 0:
+            gtp.iloc[ii, ind_cols_2] = gtp.iloc[ii, ind_cols_1][0]
         else:
             gtp.iloc[ii, ind_cols_2] = np.nan
     else:
-        gtp.iloc[ii, ind_cols_2] = gtp.iloc[ii, ind_cols].iloc[0]
+        gtp.iloc[ii, ind_cols_2] = gtp.iloc[ii, ind_cols]
 
 gtp[pd.MultiIndex.from_tuples([('Demand','Germany','Gas-to-Power (calculated)')])] = gtp[pd.MultiIndex.from_tuples([('Intermediate Calculation','#Germany','Gas-to-Power')])]
 gtp[pd.MultiIndex.from_tuples([('Demand','','Total')])] = pd.DataFrame(gtp.iloc[:,[0,1,2,3,6,10]].sum(axis=1, skipna=False))
@@ -214,11 +214,11 @@ Demand.index = pd.to_datetime(Demand.index)
 Demand = Demand[~((Demand.index.month == 2) & (Demand.index.day == 29))]
 Demand['total_demand'] = Demand.sum(axis=1)
 
-demand_out = Demand.resample('ME').mean().diff(12).copy()
-demand_out['total_demand_%'] = Demand.resample('ME').mean().pct_change(12)['total_demand']
-demand_out['Industry_%'] = Demand.resample('ME').mean().pct_change(12)['Ind']
-demand_out['LDZ_%'] = Demand.resample('ME').mean().pct_change(12)['LDZ']
-demand_out['GTP_%'] = Demand.resample('ME').mean().pct_change(12)['GTP']
+demand_out = Demand.resample('M').mean().diff(12).copy()
+demand_out['total_demand_%'] = Demand.resample('M').mean().pct_change(12)['total_demand']
+demand_out['Industry_%'] = Demand.resample('M').mean().pct_change(12)['Ind']
+demand_out['LDZ_%'] = Demand.resample('M').mean().pct_change(12)['LDZ']
+demand_out['GTP_%'] = Demand.resample('M').mean().pct_change(12)['GTP']
 
 #%% Process calendar year data (using original approach for exact match)
 union = pd.MultiIndex.from_tuples([('','','Gas-to-Power'),('','','Industrial'),('','','LDZ')])
@@ -348,11 +348,11 @@ Calendar_years_YOY = df_yoy_ind.merge(df_yoy_gtp, left_index=True, right_index=T
 # Create monthly data
 Calendar_years_monthly = Calendar_years.copy()
 Calendar_years_monthly.index = pd.date_range('2022-01-01', freq='D', periods=365)
-Calendar_years_monthly = Calendar_years_monthly.resample('ME').mean()
+Calendar_years_monthly = Calendar_years_monthly.resample('M').mean()
 
 Calendar_years_perc_monthly = Calendar_years_perc.copy()
 Calendar_years_perc_monthly.index = pd.date_range('2022-01-01', freq='D', periods=365)
-Calendar_years_perc_monthly = Calendar_years_perc_monthly.resample('ME').mean()
+Calendar_years_perc_monthly = Calendar_years_perc_monthly.resample('M').mean()
 
 # Create 2017-2021 average (placeholder - needs specific calculation)
 avg_2017_2021 = Calendar_years.copy()  # This would need the actual 2017-2021 average calculation
@@ -415,7 +415,8 @@ Calendar_years_perc_monthly_out.index = pd.to_datetime(Calendar_years_perc_month
 # Write all sheets to ONE file with EXACT positioning - NO GAPS
 # Configure Excel writer with proper date formatting
 with pd.ExcelWriter(output_filename, engine='xlsxwriter', 
-                   datetime_format='yyyy-mm-dd') as writer:
+                   datetime_format='yyyy-mm-dd',
+                   options={'strings_to_numbers': True}) as writer:
     # ALL SHEETS START AT ROW 1 (startrow=0) - NO GAPS BETWEEN HEADERS AND DATA
     
     # Sheet 1: Multiticker
