@@ -298,8 +298,9 @@ tot_DD_perc.columns = tot_cols
 DD = ind_DD.merge(gtp_DD, left_index=True, right_index=True, how="outer").merge(ldz_DD, left_index=True, right_index=True, how="outer").merge(tot_DD, left_index=True, right_index=True, how="outer")
 DD_perc = ind_DD_perc.merge(gtp_DD_perc, left_index=True, right_index=True, how="outer").merge(ldz_DD_perc, left_index=True, right_index=True, how="outer").merge(tot_DD_perc, left_index=True, right_index=True, how="outer")
 
-DD.index = pd.to_datetime(DD.index)
-DD_perc.index = pd.to_datetime(DD_perc.index)
+# Fix: Create proper date index instead of converting "%m-%d" strings
+DD.index = pd.date_range('2022-01-01', freq='D', periods=365)
+DD_perc.index = pd.date_range('2022-01-01', freq='D', periods=365)
 
 # Long format data
 index_long = pd.date_range('2022-01-01', freq='D', periods=1826)
