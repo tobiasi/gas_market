@@ -360,60 +360,63 @@ avg_2017_2021 = Calendar_years.copy()  # This would need the actual 2017-2021 av
 # CONSOLIDATED WRITE: ALL 17 SHEETS IN ONE FILE
 print("Writing consolidated file with all 17 sheets...")
 
-# Prepare data for Excel writing - CLEAN DataFrames to eliminate gaps
+# Prepare data for Excel writing - CLEAN DataFrames with PROPER Excel dates
 full_data_out = full_data.copy()
-full_data_out.index = to_excel_dates(pd.to_datetime(full_data_out.index))
+full_data_out.index = pd.to_datetime(full_data_out.index)
 
 countries_out = countries.copy()
-countries_out.index = to_excel_dates(pd.to_datetime(countries.index))
+countries_out.index = pd.to_datetime(countries.index)
 
 supply_out = supply.copy()
-supply_out.index = to_excel_dates(pd.to_datetime(supply_out.index))
+supply_out.index = pd.to_datetime(supply_out.index)
 
-# Clean LNG data - remove empty columns that cause gaps
+# Clean LNG data - remove empty columns that cause gaps and use proper dates
 lng_out = lng.copy()
-lng_out.index = to_excel_dates(pd.to_datetime(lng_out.index))
+lng_out.index = pd.to_datetime(lng_out.index)
 # Drop any completely empty columns
 lng_out = lng_out.dropna(axis=1, how='all')
 
 ldz_out = ldz.copy()
-ldz_out.index = to_excel_dates(pd.to_datetime(ldz_out.index))
+ldz_out.index = pd.to_datetime(ldz_out.index)
 # Drop any completely empty columns
 ldz_out = ldz_out.dropna(axis=1, how='all')
 
 gtp_out = gtp.copy()
-gtp_out.index = to_excel_dates(pd.to_datetime(gtp_out.index))
+gtp_out.index = pd.to_datetime(gtp_out.index)
 # Drop any completely empty columns
 gtp_out = gtp_out.dropna(axis=1, how='all')
 
 industry_out = industry.copy()
-industry_out.index = to_excel_dates(pd.to_datetime(industry_out.index))
+industry_out.index = pd.to_datetime(industry_out.index)
 # Drop any completely empty columns
 industry_out = industry_out.dropna(axis=1, how='all')
 
 demand_out_final = demand_out.dropna().copy()
-demand_out_final.index = to_excel_dates(demand_out_final.index)
+demand_out_final.index = pd.to_datetime(demand_out_final.index)
 
 Actuals_out = Actuals.copy()
-Actuals_out.index = to_excel_dates(pd.date_range('2022-01-01', freq='D', periods=365))
+Actuals_out.index = pd.date_range('2022-01-01', freq='D', periods=365)
 
 Calendar_years_out = Calendar_years.copy()
-Calendar_years_out.index = to_excel_dates(pd.date_range('2022-01-01', freq='D', periods=365))
+Calendar_years_out.index = pd.date_range('2022-01-01', freq='D', periods=365)
 
 Calendar_years_perc_out = Calendar_years_perc.copy()
-Calendar_years_perc_out.index = to_excel_dates(pd.date_range('2022-01-01', freq='D', periods=365))
+Calendar_years_perc_out.index = pd.date_range('2022-01-01', freq='D', periods=365)
 
 Calendar_years_YOY_out = Calendar_years_YOY.copy()
-Calendar_years_YOY_out.index = to_excel_dates(pd.date_range('2022-01-01', freq='D', periods=365))
+Calendar_years_YOY_out.index = pd.date_range('2022-01-01', freq='D', periods=365)
 
 Calendar_years_monthly_out = Calendar_years_monthly.copy()
-Calendar_years_monthly_out.index = to_excel_dates(pd.to_datetime(Calendar_years_monthly_out.index))
+Calendar_years_monthly_out.index = pd.to_datetime(Calendar_years_monthly_out.index)
 
 Calendar_years_perc_monthly_out = Calendar_years_perc_monthly.copy()
-Calendar_years_perc_monthly_out.index = to_excel_dates(pd.to_datetime(Calendar_years_perc_monthly_out.index))
+Calendar_years_perc_monthly_out.index = pd.to_datetime(Calendar_years_perc_monthly_out.index)
 
 # Write all sheets to ONE file with EXACT positioning - NO GAPS
-with pd.ExcelWriter(output_filename, engine='xlsxwriter') as writer:
+# Configure Excel writer with proper date formatting
+with pd.ExcelWriter(output_filename, engine='xlsxwriter', 
+                   datetime_format='yyyy-mm-dd',
+                   options={'strings_to_numbers': True}) as writer:
     # ALL SHEETS START AT ROW 1 (startrow=0) - NO GAPS BETWEEN HEADERS AND DATA
     
     # Sheet 1: Multiticker
