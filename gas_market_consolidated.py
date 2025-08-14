@@ -415,8 +415,7 @@ Calendar_years_perc_monthly_out.index = pd.to_datetime(Calendar_years_perc_month
 # Write all sheets to ONE file with EXACT positioning - NO GAPS
 # Configure Excel writer with proper date formatting
 with pd.ExcelWriter(output_filename, engine='xlsxwriter', 
-                   datetime_format='yyyy-mm-dd',
-                   options={'strings_to_numbers': True}) as writer:
+                   datetime_format='yyyy-mm-dd') as writer:
     # ALL SHEETS START AT ROW 1 (startrow=0) - NO GAPS BETWEEN HEADERS AND DATA
     
     # Sheet 1: Multiticker
