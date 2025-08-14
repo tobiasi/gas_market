@@ -412,58 +412,60 @@ Calendar_years_monthly_out.index = to_excel_dates(pd.to_datetime(Calendar_years_
 Calendar_years_perc_monthly_out = Calendar_years_perc_monthly.copy()
 Calendar_years_perc_monthly_out.index = to_excel_dates(pd.to_datetime(Calendar_years_perc_monthly_out.index))
 
-# Write all sheets to ONE file with EXACT positioning to match original
+# Write all sheets to ONE file with EXACT positioning - NO GAPS
 with pd.ExcelWriter(output_filename, engine='xlsxwriter') as writer:
-    # Sheet 1: Multiticker - starts at A1 with headers at row 1
+    # ALL SHEETS START AT ROW 1 (startrow=0) - NO GAPS
+    
+    # Sheet 1: Multiticker
     full_data_out.to_excel(writer, sheet_name='Multiticker', startrow=0, startcol=0)
     
-    # Sheet 2: Demand - starts at A1, data starts at row 4
-    countries_out.to_excel(writer, sheet_name='Demand', startrow=3, startcol=0)
+    # Sheet 2: Demand 
+    countries_out.to_excel(writer, sheet_name='Demand', startrow=0, startcol=0)
     
-    # Sheet 3: Demand YOY - starts at A1
+    # Sheet 3: Demand YOY
     demand_out_final.to_excel(writer, sheet_name='Demand YOY', startrow=0, startcol=0)
     
-    # Sheet 4: Supply - starts at A1, data starts at row 4
-    supply_out.to_excel(writer, sheet_name='Supply', startrow=3, startcol=0)
+    # Sheet 4: Supply
+    supply_out.to_excel(writer, sheet_name='Supply', startrow=0, startcol=0)
     
-    # Sheet 5: LNG imports by country - starts at A1, data starts at row 4  
-    lng_out.to_excel(writer, sheet_name='LNG imports by country', startrow=3, startcol=0)
+    # Sheet 5: LNG imports by country
+    lng_out.to_excel(writer, sheet_name='LNG imports by country', startrow=0, startcol=0)
     
-    # Sheet 6: LDZ demand - starts at A1, data starts at row 4
-    ldz_out.to_excel(writer, sheet_name='LDZ demand', startrow=3, startcol=0)
+    # Sheet 6: LDZ demand
+    ldz_out.to_excel(writer, sheet_name='LDZ demand', startrow=0, startcol=0)
     
-    # Sheet 7: Industrial demand - starts at A1, data starts at row 4
-    industry_out.to_excel(writer, sheet_name='Industrial demand', startrow=3, startcol=0)
+    # Sheet 7: Industrial demand
+    industry_out.to_excel(writer, sheet_name='Industrial demand', startrow=0, startcol=0)
     
-    # Sheet 8: Gas-to-Power demand - starts at A1, data starts at row 4
-    gtp_out.to_excel(writer, sheet_name='Gas-to-Power demand', startrow=3, startcol=0)
+    # Sheet 8: Gas-to-Power demand
+    gtp_out.to_excel(writer, sheet_name='Gas-to-Power demand', startrow=0, startcol=0)
     
-    # Sheet 9: Calendar years - monthly levels - starts at A1
+    # Sheet 9: Calendar years - monthly levels
     Calendar_years_monthly_out.to_excel(writer, sheet_name='Calendar years - monthly levels', startrow=0, startcol=0)
     
-    # Sheet 10: Calendar years - monthly - starts at A1
+    # Sheet 10: Calendar years - monthly
     Calendar_years_monthly_out.to_excel(writer, sheet_name='Calendar years - monthly', startrow=0, startcol=0)
     
-    # Sheet 11: Calendar years, % - monthly - starts at A1
+    # Sheet 11: Calendar years, % - monthly
     Calendar_years_perc_monthly_out.to_excel(writer, sheet_name='Calendar years, % - monthly', startrow=0, startcol=0)
     
-    # Sheet 12: Calendar years actuals - starts at A1
+    # Sheet 12: Calendar years actuals
     Actuals_out.to_excel(writer, sheet_name='Calendar years actuals', startrow=0, startcol=0)
     
-    # Sheet 13: Calendar years - starts at A1
+    # Sheet 13: Calendar years
     Calendar_years_out.to_excel(writer, sheet_name='Calendar years', startrow=0, startcol=0)
     
-    # Sheet 14: Calendar years, % - starts at A1  
+    # Sheet 14: Calendar years, %
     Calendar_years_perc_out.to_excel(writer, sheet_name='Calendar years, %', startrow=0, startcol=0)
     
-    # Sheet 15: Calendar years YOY % - starts at A1
+    # Sheet 15: Calendar years YOY %
     Calendar_years_YOY_out.to_excel(writer, sheet_name='Calendar years YOY %', startrow=0, startcol=0)
     
-    # Sheet 16: 2017-2021 average - starts at A1
+    # Sheet 16: 2017-2021 average
     avg_2017_2021.to_excel(writer, sheet_name='2017-2021 average', startrow=0, startcol=0)
     
-    # Sheet 17: Projected supply - starts at A1, data starts at row 4
-    supply_out.to_excel(writer, sheet_name='Projected supply', startrow=3, startcol=0)
+    # Sheet 17: Projected supply
+    supply_out.to_excel(writer, sheet_name='Projected supply', startrow=0, startcol=0)
 
 print(f"\n{'='*50}")
 print("CONSOLIDATED OUTPUT COMPLETE!")
