@@ -360,7 +360,7 @@ avg_2017_2021 = Calendar_years.copy()  # This would need the actual 2017-2021 av
 # CONSOLIDATED WRITE: ALL 17 SHEETS IN ONE FILE
 print("Writing consolidated file with all 17 sheets...")
 
-# Prepare data for Excel writing
+# Prepare data for Excel writing - CLEAN DataFrames to eliminate gaps
 full_data_out = full_data.copy()
 full_data_out.index = to_excel_dates(pd.to_datetime(full_data_out.index))
 
@@ -370,17 +370,26 @@ countries_out.index = to_excel_dates(pd.to_datetime(countries.index))
 supply_out = supply.copy()
 supply_out.index = to_excel_dates(pd.to_datetime(supply_out.index))
 
+# Clean LNG data - remove empty columns that cause gaps
 lng_out = lng.copy()
 lng_out.index = to_excel_dates(pd.to_datetime(lng_out.index))
+# Drop any completely empty columns
+lng_out = lng_out.dropna(axis=1, how='all')
 
 ldz_out = ldz.copy()
 ldz_out.index = to_excel_dates(pd.to_datetime(ldz_out.index))
+# Drop any completely empty columns
+ldz_out = ldz_out.dropna(axis=1, how='all')
 
 gtp_out = gtp.copy()
 gtp_out.index = to_excel_dates(pd.to_datetime(gtp_out.index))
+# Drop any completely empty columns
+gtp_out = gtp_out.dropna(axis=1, how='all')
 
 industry_out = industry.copy()
 industry_out.index = to_excel_dates(pd.to_datetime(industry_out.index))
+# Drop any completely empty columns
+industry_out = industry_out.dropna(axis=1, how='all')
 
 demand_out_final = demand_out.dropna().copy()
 demand_out_final.index = to_excel_dates(demand_out_final.index)
