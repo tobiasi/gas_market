@@ -341,25 +341,29 @@ calendar_data = {
 
 batch_write_excel(filename, calendar_data)
 
-# Additional monthly data
-calendar_data_monthly = {
-    'Calendar years - monthly': (DD_long_m, 2, 20),
-    'Calendar years, % - monthly': (DD_perc_long_m, 2, 20)
-}
-
-for sheet, (df, row, col) in calendar_data_monthly.items():
-    temp_filename = filename.replace('.xlsx', '_temp.xlsx').replace('.xlsm', '_temp.xlsm')
+# OPTIMIZED: Write additional monthly data to separate temp files to avoid merged cell conflicts
+print("Writing additional monthly data...")
+try:
+    monthly_temp_filename = filename.replace('.xlsx', '_monthly_temp.xlsx').replace('.xlsm', '_monthly_temp.xlsm')
     
-    with pd.ExcelWriter(temp_filename, mode='a', engine='openpyxl', if_sheet_exists='overlay') as writer:
-        df_copy = df.copy()
-        df_copy.index = to_excel_dates(pd.to_datetime(df_copy.index))
-        df_copy.to_excel(writer, sheet_name=sheet, startrow=row-1, startcol=col-1)
-
-# Write cumulative data
-with pd.ExcelWriter(temp_filename, mode='a', engine='openpyxl', if_sheet_exists='overlay') as writer:
-    DD_cum_m_copy = DD_cum_m.copy()
-    DD_cum_m_copy.index = to_excel_dates(pd.to_datetime(DD_cum_m_copy.index))
-    DD_cum_m_copy.to_excel(writer, sheet_name='Calendar years - monthly', startrow=6, startcol=19)
+    with pd.ExcelWriter(monthly_temp_filename, engine='xlsxwriter') as writer:
+        # Additional monthly data
+        DD_long_m_copy = DD_long_m.copy()
+        DD_long_m_copy.index = to_excel_dates(pd.to_datetime(DD_long_m_copy.index))
+        DD_long_m_copy.to_excel(writer, sheet_name='Calendar years - monthly', startrow=1, startcol=19)
+        
+        DD_perc_long_m_copy = DD_perc_long_m.copy()
+        DD_perc_long_m_copy.index = to_excel_dates(pd.to_datetime(DD_perc_long_m_copy.index))
+        DD_perc_long_m_copy.to_excel(writer, sheet_name='Calendar years, % - monthly', startrow=1, startcol=19)
+        
+        # Cumulative data
+        DD_cum_m_copy = DD_cum_m.copy()
+        DD_cum_m_copy.index = to_excel_dates(pd.to_datetime(DD_cum_m_copy.index))
+        DD_cum_m_copy.to_excel(writer, sheet_name='Calendar years - cumulative', startrow=1, startcol=1)
+    
+    print(f"Additional monthly data saved to: {monthly_temp_filename}")
+except Exception as e:
+    print(f"Warning: Could not write additional monthly data: {e}")
 
 #%% Rolling average data processing
 print("Processing rolling average data...")
@@ -446,21 +450,26 @@ tot_DD_perc.columns = tot_cols
 DD = ind_DD.merge(gtp_DD, left_index=True, right_index=True, how="outer").merge(ldz_DD, left_index=True, right_index=True, how="outer").merge(tot_DD, left_index=True, right_index=True, how="outer")
 DD_perc = ind_DD_perc.merge(gtp_DD_perc, left_index=True, right_index=True, how="outer").merge(ldz_DD_perc, left_index=True, right_index=True, how="outer").merge(tot_DD_perc, left_index=True, right_index=True, how="outer")
 
-# OPTIMIZED: Batch write rolling data
+# OPTIMIZED: Write rolling data to separate temp file to avoid conflicts
 print("Writing rolling data to Excel...")
-rolling_data = {
-    'Calendar years actuals': (Actuals, 2, 3),
-    'Calendar years': (DD, 2, 3),
-    'Calendar years, %': (DD_perc, 2, 3)
-}
-
-for sheet, (df, row, col) in rolling_data.items():
-    temp_filename = filename.replace('.xlsx', '_temp.xlsx').replace('.xlsm', '_temp.xlsm')
+try:
+    rolling_temp_filename = filename.replace('.xlsx', '_rolling_temp.xlsx').replace('.xlsm', '_rolling_temp.xlsm')
     
-    with pd.ExcelWriter(temp_filename, mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-        df_copy = df.copy()
-        df_copy.index = to_excel_dates(pd.date_range('2022-01-01', freq='D', periods=365))
-        df_copy.to_excel(writer, sheet_name=sheet, startrow=row-1, startcol=col-1)
+    rolling_data = {
+        'Calendar years actuals': (Actuals, 2, 3),
+        'Calendar years': (DD, 2, 3),
+        'Calendar years, %': (DD_perc, 2, 3)
+    }
+    
+    with pd.ExcelWriter(rolling_temp_filename, engine='xlsxwriter') as writer:
+        for sheet, (df, row, col) in rolling_data.items():
+            df_copy = df.copy()
+            df_copy.index = to_excel_dates(pd.date_range('2022-01-01', freq='D', periods=365))
+            df_copy.to_excel(writer, sheet_name=sheet, startrow=row-1, startcol=col-1)
+    
+    print(f"Rolling data saved to: {rolling_temp_filename}")
+except Exception as e:
+    print(f"Warning: Could not write rolling data: {e}")
 
 #%% YOY percentage data
 print("Processing YOY percentage data...")
@@ -500,18 +509,19 @@ df_tot.columns = tot_cols
 
 Actuals_t = df_ind.merge(df_gtp, left_index=True, right_index=True, how="outer").merge(df_ldz, left_index=True, right_index=True, how="outer").merge(df_tot, left_index=True, right_index=True, how="outer")
 
-# OPTIMIZED: Write YOY data
-yoy_data = {
-    'Calendar years YOY %': (Actuals_t, 2, 3)
-}
-
-for sheet, (df, row, col) in yoy_data.items():
-    temp_filename = filename.replace('.xlsx', '_temp.xlsx').replace('.xlsm', '_temp.xlsm')
+# OPTIMIZED: Write YOY data to separate temp file to avoid conflicts
+print("Writing YOY data to Excel...")
+try:
+    yoy_temp_filename = filename.replace('.xlsx', '_yoy_temp.xlsx').replace('.xlsm', '_yoy_temp.xlsm')
     
-    with pd.ExcelWriter(temp_filename, mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-        df_copy = df.copy()
+    with pd.ExcelWriter(yoy_temp_filename, engine='xlsxwriter') as writer:
+        df_copy = Actuals_t.copy()
         df_copy.index = to_excel_dates(pd.date_range('2022-01-01', freq='D', periods=365))
-        df_copy.to_excel(writer, sheet_name=sheet, startrow=row-1, startcol=col-1)
+        df_copy.to_excel(writer, sheet_name='Calendar years YOY %', startrow=1, startcol=2)
+    
+    print(f"YOY data saved to: {yoy_temp_filename}")
+except Exception as e:
+    print(f"Warning: Could not write YOY data: {e}")
 
 #%% Simulation section
 print("Processing simulation data...")
@@ -739,13 +749,17 @@ demand_out['Industry_%'] = Demand.resample('M').mean().pct_change(12)['Ind']
 demand_out['LDZ_%'] = Demand.resample('M').mean().pct_change(12)['LDZ']
 demand_out['GTP_%'] = Demand.resample('M').mean().pct_change(12)['GTP']
 
-# Write demand YOY data
-demand_filename = filename.replace('.xlsx', '_temp.xlsx').replace('.xlsm', '_temp.xlsm')
+# Write demand YOY data to separate temp file to avoid conflicts
+print("Writing demand YOY data...")
 try:
-    with pd.ExcelWriter(demand_filename, mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
+    demand_yoy_filename = filename.replace('.xlsx', '_demand_yoy_temp.xlsx').replace('.xlsm', '_demand_yoy_temp.xlsm')
+    
+    with pd.ExcelWriter(demand_yoy_filename, engine='xlsxwriter') as writer:
         demand_out_copy = demand_out.dropna().copy()
         demand_out_copy.index = to_excel_dates(demand_out_copy.index)
         demand_out_copy.to_excel(writer, sheet_name='Demand YOY', startrow=1, startcol=1)
+    
+    print(f"Demand YOY data saved to: {demand_yoy_filename}")
 except Exception as e:
     print(f"Warning: Could not write demand YOY data: {e}")
 
