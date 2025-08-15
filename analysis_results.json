@@ -1,0 +1,30 @@
+{
+  "target_values": {
+    "France": 92.57104958502501,
+    "Belgium": 41.06295747389645,
+    "Italy": 151.4659795006551,
+    "Netherlands": 90.49317900966108,
+    "GB": 97.74000000000001,
+    "Austria": -9.312990355171262,
+    "Germany": 205.03524220444262,
+    "Total": 767.6925372545071,
+    "Industrial": 268.2584083736293,
+    "LDZ": 325.29215996096804,
+    "Gas-to-Power": 174.14196891990974
+  },
+  "column_mapping": {
+    "France": 2,
+    "Belgium": 3,
+    "Italy": 4,
+    "Netherlands": 20,
+    "GB": 21,
+    "Austria": 28,
+    "Germany": 8,
+    "Total": 12,
+    "Industrial": 13,
+    "LDZ": 14,
+    "Gas-to-Power": 15
+  },
+  "header_row": 10,
+  "bloomberg_file": "our_multiticker.csv"
+}
