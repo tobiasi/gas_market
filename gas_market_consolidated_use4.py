@@ -316,26 +316,76 @@ for a, b, c in zip(demand_1, demand_2, demand_3):
 
 ldz[pd.MultiIndex.from_tuples([('Demand','','Total')])] = pd.DataFrame(ldz.iloc[:,[0,1,2,3,4,5,6,7,8,9,10]].sum(axis=1, skipna=False))
 
-#%% Main panel: Daily historic data by category
+#%% Main panel: Daily historic data by category - IMPROVED CONSISTENT AGGREGATION
 print("Processing country data...")
-demand_1 = ['Demand' ,'Demand' , 'Demand', 'Demand', 'Demand', 'Demand', 'Demand', 'Demand','Demand', 'Demand (Net)']
-demand_2 = ['','','','','','','','','','']
-demand_3 = ['France', 'Belgium' ,'Italy' ,'Netherlands', 'GB', 'Austria' ,'Germany' ,'Switzerland', 'Luxembourg', 'Island of Ireland' ]
+
+# Define country list for consistent processing
+country_list = ['France', 'Belgium', 'Italy', 'Netherlands', 'GB', 'Austria', 'Germany', 'Switzerland', 'Luxembourg', 'Island of Ireland']
+
+# Create countries DataFrame with proper structure
+demand_1 = ['Demand'] * len(country_list) + ['Demand (Net)']
+demand_2 = [''] * (len(country_list) + 1) 
+demand_3 = country_list + ['Island of Ireland']
 
 countries = pd.DataFrame(index=index, columns=pd.MultiIndex.from_tuples(list(zip(demand_1, demand_2, demand_3))))
 
-for a, b, c in zip(demand_1, demand_2, demand_3):
-    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(3)==c)].sum(axis=1, skipna=False)
-    countries.iloc[:, (countries.columns.get_level_values(0)==a) & (countries.columns.get_level_values(2)==c)] = l
+# Populate individual countries using consistent logic
+for country in country_list:
+    # Get all demand data for this country (regardless of subcategory)
+    country_mask = (full_data.columns.get_level_values(2) == 'Demand') & (full_data.columns.get_level_values(3) == country)
+    country_total = full_data.iloc[:, country_mask].sum(axis=1, skipna=False)
+    countries[('Demand', '', country)] = country_total
 
-# Calculate totals - with debugging
-countries[pd.MultiIndex.from_tuples([('','','Total')])] = pd.DataFrame(countries.iloc[:,[0,1,2,3,4,5,6,7,8,9]].sum(axis=1, skipna=False))
-countries[pd.MultiIndex.from_tuples([('','','Industrial')])] = industry.iloc[:,industry.columns.get_level_values(2)=='Total']
-countries[pd.MultiIndex.from_tuples([('','','LDZ')])] = ldz.iloc[:,ldz.columns.get_level_values(2)=='Total']
-countries[pd.MultiIndex.from_tuples([('','','Gas-to-Power')])] = gtp.iloc[:,gtp.columns.get_level_values(2)=='Total']
+# Handle Island of Ireland separately (Net demand)
+ireland_mask = (full_data.columns.get_level_values(2) == 'Demand (Net)') & (full_data.columns.get_level_values(3) == 'Island of Ireland')
+ireland_total = full_data.iloc[:, ireland_mask].sum(axis=1, skipna=False) 
+countries[('Demand (Net)', '', 'Island of Ireland')] = ireland_total
 
-# DEBUG: Check if sums add up
-print("\n🔍 DEBUGGING DEMAND TOTALS...")
+print("🔧 IMPROVED CONSISTENT AGGREGATION METHOD:")
+print("   Building category totals directly from raw data...")
+
+# CONSISTENT METHOD: Build all totals from the same raw data using identical logic
+def get_category_total(category_descriptions):
+    """Get total for a category using consistent filtering logic"""
+    total = pd.Series(0.0, index=index)
+    
+    for desc in category_descriptions:
+        # Find all columns matching this description pattern
+        mask = full_data.columns.get_level_values(0).str.contains(desc, case=False, na=False)
+        if mask.any():
+            category_data = full_data.iloc[:, mask].sum(axis=1, skipna=False)
+            total += category_data
+            print(f"   Added {mask.sum()} series for '{desc}'")
+    
+    return total
+
+# Define category descriptions (what to look for in the Description field)
+industrial_keywords = ['Industrial', 'industry', 'industrial and power']
+ldz_keywords = ['LDZ', 'ldz', 'Low Distribution Zone']  
+gtp_keywords = ['Gas-to-Power', 'gas-to-power', 'Power', 'electricity']
+
+print("\n🏭 Building Industrial total from raw data...")
+industrial_total = get_category_total(industrial_keywords)
+
+print("\n🏘️ Building LDZ total from raw data...")
+ldz_total = get_category_total(ldz_keywords)
+
+print("\n⚡ Building Gas-to-Power total from raw data...")
+gtp_total = get_category_total(gtp_keywords)
+
+# Calculate country total from individual countries (consistent method)
+print("\n🌍 Building Country total from individual countries...")
+country_total = countries[[(c, '', country) for c, _, country in countries.columns if country in country_list]].sum(axis=1, skipna=False)
+country_total += countries[('Demand (Net)', '', 'Island of Ireland')]  # Add Ireland
+
+# Add all totals to countries DataFrame
+countries[pd.MultiIndex.from_tuples([('','','Total')])] = country_total
+countries[pd.MultiIndex.from_tuples([('','','Industrial')])] = industrial_total
+countries[pd.MultiIndex.from_tuples([('','','LDZ')])] = ldz_total
+countries[pd.MultiIndex.from_tuples([('','','Gas-to-Power')])] = gtp_total
+
+# ENHANCED DEBUG: Check if sums add up with detailed analysis
+print("\n🔍 ENHANCED DEBUGGING WITH CONSISTENT AGGREGATION...")
 total_col = countries[('','','Total')]
 industrial_col = countries[('','','Industrial')]
 ldz_col = countries[('','','LDZ')]
@@ -345,34 +395,46 @@ manual_sum = industrial_col + ldz_col + gtp_col
 difference = total_col - manual_sum
 max_diff = abs(difference).max()
 
-print(f"📊 Sum verification:")
+print(f"📊 NEW CONSISTENT AGGREGATION RESULTS:")
 print(f"   Country Total vs (Industrial + LDZ + GTP)")
-print(f"   Maximum difference: {max_diff:.4f}")
-print(f"   Mean difference: {difference.mean():.4f}")
+print(f"   Maximum difference: {max_diff:.6f}")
+print(f"   Mean difference: {difference.mean():.6f}")
+print(f"   Standard deviation: {difference.std():.6f}")
 
-if max_diff > 1.0:  # If difference is significant
-    print(f"⚠️  SIGNIFICANT DIFFERENCES DETECTED!")
-    print(f"   This suggests data categorization issues")
+# Check what percentage of total this represents
+avg_total = total_col.mean()
+percentage_error = (max_diff / avg_total) * 100 if avg_total > 0 else 0
+
+print(f"   Average total demand: {avg_total:.2f}")
+print(f"   Max error as % of total: {percentage_error:.4f}%")
+
+if max_diff > 0.1:  # Lower tolerance for better validation
+    print(f"⚠️  DIFFERENCES DETECTED (>{0.1} threshold):")
     
     # Show a sample of the problematic data
     sample_idx = abs(difference).idxmax()
     print(f"\n   Worst case on {sample_idx}:")
-    print(f"   Total: {total_col[sample_idx]:.2f}")
-    print(f"   Industrial: {industrial_col[sample_idx]:.2f}")
-    print(f"   LDZ: {ldz_col[sample_idx]:.2f}")  
-    print(f"   Gas-to-Power: {gtp_col[sample_idx]:.2f}")
-    print(f"   Sum: {manual_sum[sample_idx]:.2f}")
-    print(f"   Difference: {difference[sample_idx]:.2f}")
+    print(f"   Total: {total_col[sample_idx]:.6f}")
+    print(f"   Industrial: {industrial_col[sample_idx]:.6f}")
+    print(f"   LDZ: {ldz_col[sample_idx]:.6f}")  
+    print(f"   Gas-to-Power: {gtp_col[sample_idx]:.6f}")
+    print(f"   Sum: {manual_sum[sample_idx]:.6f}")
+    print(f"   Difference: {difference[sample_idx]:.6f}")
     
-    # Check for potential causes
-    print(f"\n💡 POTENTIAL CAUSES:")
-    print(f"   1. Missing/unavailable tickers affecting categories differently")
-    print(f"   2. Data classification differences (some data not in Industrial/LDZ/GTP)")
-    print(f"   3. Double counting in country totals")
-    print(f"   4. Different date ranges between datasets")
+    # Additional diagnostic information
+    print(f"\n🔍 DIAGNOSTIC INFO:")
+    
+    # Check for data that might not be categorized
+    all_demand_mask = full_data.columns.get_level_values(2) == 'Demand'
+    total_demand_from_raw = full_data.iloc[:, all_demand_mask].sum(axis=1, skipna=False)
+    
+    print(f"   Raw total demand (all 'Demand' series): {total_demand_from_raw[sample_idx]:.6f}")
+    print(f"   Our country total: {total_col[sample_idx]:.6f}")
+    print(f"   Difference from raw: {(total_demand_from_raw[sample_idx] - total_col[sample_idx]):.6f}")
     
 else:
-    print(f"✅ Sums match within acceptable tolerance!")
+    print(f"✅ EXCELLENT! Sums match within tight tolerance (<0.1)!")
+    print(f"   The consistent aggregation method has resolved the discrepancies!")
 
 last_index = countries.apply(lambda x: x[x.notnull()].index[-1]).sort_values().values[0]
 countries = countries.loc[:last_index]
