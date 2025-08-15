@@ -1,0 +1,98 @@
+# -*- coding: utf-8 -*-
+"""
+TRACE: Find where Italy values are actually calculated in the processing pipeline
+"""
+
+def trace_italy_calculation():
+    """Guide to trace Italy calculation through the pipeline"""
+    
+    print(f"\n{'='*80}")
+    print("🔍 ITALY CALCULATION PIPELINE TRACE")
+    print(f"{'='*80}")
+    
+    print(f"📊 MYSTERY SUMMARY:")
+    print(f"   - MultiTicker shows Italy DEMAND = 0")
+    print(f"   - Final output shows Italy = ~117")
+    print(f"   - Excel expects Italy = ~114")
+    print(f"   - Difference: +3 units")
+    print(f"")
+    print(f"💡 CONCLUSION: Italy values are calculated AFTER MultiTicker stage")
+    
+    print(f"\n🔍 INVESTIGATION STEPS:")
+    print(f"Add these debug prints to gas_market_consolidated_use4.py:")
+    print(f"")
+    
+    print(f"1️⃣ AFTER MultiTicker (full_data) creation:")
+    print(f"```python")
+    print(f"# Add after line ~213 (after full_data processing)")
+    print(f"print('DEBUG: Italy in full_data MultiTicker:')")
+    print(f"italy_mask = (full_data.columns.get_level_values(2) == 'Demand') & \\")
+    print(f"             (full_data.columns.get_level_values(3) == 'Italy')")
+    print(f"italy_series = full_data.iloc[:, italy_mask]")
+    print(f"print(f'  Italy DEMAND series count: {{italy_series.shape[1]}}')")
+    print(f"if italy_series.shape[1] > 0:")
+    print(f"    italy_total = italy_series.sum(axis=1, skipna=False)")
+    print(f"    print(f'  Italy total from MultiTicker: {{italy_total.iloc[0]:.2f}}')")
+    print(f"else:")
+    print(f"    print(f'  No Italy DEMAND series in MultiTicker')")
+    print(f"```")
+    
+    print(f"\n2️⃣ AFTER industry DataFrame creation:")
+    print(f"```python")
+    print(f"# Add after line ~276 (after industry DataFrame)")
+    print(f"print('DEBUG: Italy in industry DataFrame:')")
+    print(f"italy_industry_cols = [col for col in industry.columns if 'Italy' in str(col)]")
+    print(f"print(f'  Italy industry columns: {{italy_industry_cols}}')")
+    print(f"for col in italy_industry_cols:")
+    print(f"    sample_val = industry[col].iloc[0]")
+    print(f"    print(f'    {{col}}: {{sample_val:.2f}}')")
+    print(f"```")
+    
+    print(f"\n3️⃣ AFTER gtp DataFrame creation:")
+    print(f"```python")
+    print(f"# Add after line ~303 (after gtp DataFrame)")
+    print(f"print('DEBUG: Italy in gtp DataFrame:')")
+    print(f"italy_gtp_cols = [col for col in gtp.columns if 'Italy' in str(col)]")
+    print(f"print(f'  Italy gtp columns: {{italy_gtp_cols}}')")
+    print(f"for col in italy_gtp_cols:")
+    print(f"    sample_val = gtp[col].iloc[0]")
+    print(f"    print(f'    {{col}}: {{sample_val:.2f}}')")
+    print(f"```")
+    
+    print(f"\n4️⃣ AFTER ldz DataFrame creation:")
+    print(f"```python")
+    print(f"# Add after line ~318 (after ldz DataFrame)")
+    print(f"print('DEBUG: Italy in ldz DataFrame:')")
+    print(f"italy_ldz_cols = [col for col in ldz.columns if 'Italy' in str(col)]")
+    print(f"print(f'  Italy ldz columns: {{italy_ldz_cols}}')")
+    print(f"for col in italy_ldz_cols:")
+    print(f"    sample_val = ldz[col].iloc[0]")
+    print(f"    print(f'    {{col}}: {{sample_val:.2f}}')")
+    print(f"```")
+    
+    print(f"\n5️⃣ DURING countries DataFrame creation:")
+    print(f"```python")
+    print(f"# Add after line ~337 (after Italy country calculation)")
+    print(f"print('DEBUG: Italy country calculation:')")
+    print(f"italy_country_mask = (full_data.columns.get_level_values(2) == 'Demand') & \\")
+    print(f"                     (full_data.columns.get_level_values(3) == 'Italy')")
+    print(f"italy_country_total = full_data.iloc[:, italy_country_mask].sum(axis=1, skipna=False)")
+    print(f"print(f'  Italy country mask finds {{italy_country_mask.sum()}} series')")
+    print(f"print(f'  Italy country total: {{italy_country_total.iloc[0]:.2f}}')")
+    print(f"```")
+    
+    print(f"\n🎯 EXPECTED RESULTS:")
+    print(f"   - Step 1: Should show 0 (confirmed)")
+    print(f"   - Steps 2-4: Will show where Italy values appear")
+    print(f"   - Step 5: Will show the final Italy calculation")
+    print(f"")
+    print(f"🔍 LIKELY SOURCE:")
+    print(f"   Italy values probably come from:")
+    print(f"   • Cross-border flows INTO Italy")
+    print(f"   • Industry/LDZ/GTP processing that creates Italy data")
+    print(f"   • Calculated/derived Italy values")
+    print(f"")
+    print(f"💡 ADD THESE DEBUG PRINTS AND RUN YOUR SCRIPT!")
+
+if __name__ == "__main__":
+    trace_italy_calculation()
