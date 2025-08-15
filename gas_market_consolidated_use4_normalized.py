@@ -373,6 +373,13 @@ for country in country_list:
     country_mask = (full_data.columns.get_level_values(2) == 'Demand') & (full_data.columns.get_level_values(3) == country)
     country_total = full_data.iloc[:, country_mask].sum(axis=1, skipna=False)
     countries[('Demand', '', country)] = country_total
+    
+    # Debug: Check if we found any data for this country
+    num_series_found = country_mask.sum()
+    if num_series_found == 0:
+        print(f"⚠️  WARNING: No DEMAND series found for {country}")
+    else:
+        print(f"✅ Found {num_series_found} DEMAND series for {country}, total: {country_total.iloc[0]:.2f}")
 
 # Handle Island of Ireland separately (Net demand)
 ireland_mask = (full_data.columns.get_level_values(2) == 'Demand (Net)') & (full_data.columns.get_level_values(3) == 'Island of Ireland')
@@ -420,8 +427,15 @@ if ireland_col in countries.columns:
 # Add all totals to countries DataFrame with correct 3-level structure
 countries[('', '', 'Total')] = country_total
 countries[('', '', 'Industrial')] = industrial_total
-countries[('', '', 'LDZ')] = ldz_total
+countries[('', '', 'LDZ')] = ldz_total  
 countries[('', '', 'Gas-to-Power')] = gtp_total
+
+# Debug: Check if totals are properly calculated
+print(f"\n📊 TOTALS DEBUG:")
+print(f"   Country Total first value: {country_total.iloc[0]:.2f}")
+print(f"   Industrial Total first value: {industrial_total.iloc[0]:.2f}")
+print(f"   LDZ Total first value: {ldz_total.iloc[0]:.2f}")
+print(f"   Gas-to-Power Total first value: {gtp_total.iloc[0]:.2f}")
 
 # ENHANCED DEBUG: Check if sums add up with NORMALIZED data
 print("\n🔍 NORMALIZED DATA PRECISION CHECK...")
