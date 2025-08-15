@@ -559,6 +559,36 @@ try:
     
     print(f"🚀 Calling update_spreadsheet function...")
     
+    # Test if update_spreadsheet function is available
+    try:
+        print(f"   Checking if update_spreadsheet function exists...")
+        if 'update_spreadsheet' in globals():
+            print(f"   ✅ update_spreadsheet function is available")
+        else:
+            print(f"   ❌ update_spreadsheet function NOT available")
+            raise ImportError("update_spreadsheet function not found")
+        
+        # Check function signature
+        import inspect
+        sig = inspect.signature(update_spreadsheet)
+        print(f"   Function signature: {sig}")
+        print(f"   Expected arguments: {list(sig.parameters.keys())}")
+        
+        print(f"   Calling update_spreadsheet with:")
+        print(f"     filename: {filename}")
+        print(f"     output_filename: {output_filename}")
+        print(f"     countries shape: {countries.shape}")
+        print(f"     industry shape: {industry.shape}")
+        print(f"     gtp shape: {gtp.shape}")
+        print(f"     ldz shape: {ldz.shape}")
+        print(f"     lng shape: {lng.shape}")
+        print(f"     supply shape: {supply.shape}")
+        print(f"     index length: {len(index)}")
+        
+    except Exception as check_e:
+        print(f"   ⚠️  Pre-call check failed: {check_e}")
+    
+    # Now try the actual call
     update_spreadsheet(filename, output_filename, countries, industry, gtp, ldz, lng, supply, index)
     
     print(f"\n{'='*50}")
