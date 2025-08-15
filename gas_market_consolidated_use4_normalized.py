@@ -47,15 +47,15 @@ output_filename = 'DNB Markets EUROPEAN GAS BALANCE_temp.xlsx'
 #%% Load data, get demand components - ADAPTED FOR USE4 STRUCTURE WITH NORMALIZATION
 print("Loading Bloomberg data from use4.xlsx with normalization...")
 
-# Read tickerlist_tab.csv for normalization factors
-print("📊 Loading normalization factors from tickerlist_tab.csv...")
+# Read use4.xlsx with new column structure (based on image analysis)
+dataset = pd.read_excel(data_path, sheet_name='TickerList', skiprows=8)
+
+# Extract normalization factors from the TickerList sheet
+print("📊 Loading normalization factors from use4.xlsx TickerList sheet...")
 try:
-    ticker_list = pd.read_csv('tickerlist_tab.csv', skiprows=8)
-    print(f"✅ Loaded {len(ticker_list)} tickers with normalization factors")
-    
-    # Create normalization factor mapping
+    # Create normalization factor mapping directly from dataset
     norm_factors = {}
-    for _, row in ticker_list.iterrows():
+    for _, row in dataset.iterrows():
         ticker = row.get('Ticker')
         norm_factor = row.get('Normalization factor', 1.0)
         if pd.notna(ticker) and pd.notna(norm_factor):
@@ -67,9 +67,6 @@ except Exception as e:
     print(f"⚠️  Warning: Could not load normalization factors: {e}")
     print("   Proceeding without normalization (will cause scaling issues)")
     norm_factors = {}
-
-# Read use4.xlsx with new column structure (based on image analysis)
-dataset = pd.read_excel(data_path, sheet_name='TickerList', skiprows=8)
 
 # Handle the different column structure in use4.xlsx
 print(f"Dataset shape: {dataset.shape}")
