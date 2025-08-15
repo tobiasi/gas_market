@@ -242,7 +242,7 @@ italy_mask = (full_data.columns.get_level_values(2) == 'Demand') & \
 italy_series = full_data.iloc[:, italy_mask]
 print(f'Italy DEMAND series count: {italy_series.shape[1]}')
 if italy_series.shape[1] > 0:
-    italy_total = italy_series.sum(axis=1, skipna=False)
+    italy_total = italy_series.sum(axis=1, skipna=True)
     print(f'Normalized Italy total: {italy_total.iloc[0]:.2f} (should be ~117)')
     print(f'Italy series breakdown:')
     for i, col in enumerate(italy_series.columns):
@@ -292,7 +292,7 @@ index = full_data.index
 industry = pd.DataFrame(index=index, columns=pd.MultiIndex.from_tuples(list(zip(demand_1, demand_2, demand_3))))
 
 for a, b, c in zip(demand_1, demand_2, demand_3):
-    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=False)
+    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=True)
     industry.iloc[:, (industry.columns.get_level_values(0)==a) & (industry.columns.get_level_values(2)==c) & (industry.columns.get_level_values(1)==b)] = l
 
 ind_cols = (industry.columns.get_level_values(0)=='Demand') & (industry.columns.get_level_values(1)=='Netherlands') & (industry.columns.get_level_values(2)=='Industrial (calculated to 30/6/22 then actual)')
@@ -310,7 +310,7 @@ for ii in range(len(index)):
         industry.iloc[ii, ind_cols] = industry.iloc[ii, ind_cols_3]
 
 industry[pd.MultiIndex.from_tuples([('Demand','Germany','Industrial (calculated)')])] = industry[pd.MultiIndex.from_tuples([('Demand','Germany','Industrial and Power')])].values - industry[pd.MultiIndex.from_tuples([('Intermediate Calculation','#Germany','Gas-to-Power')])].values
-industry[pd.MultiIndex.from_tuples([('Demand','-','Total')])] = pd.DataFrame(industry.iloc[:,[0,1,2,3,8,11]].sum(axis=1, skipna=False))
+industry[pd.MultiIndex.from_tuples([('Demand','-','Total')])] = pd.DataFrame(industry.iloc[:,[0,1,2,3,8,11]].sum(axis=1, skipna=True))
 
 #%% GTP
 print("Processing Gas-to-Power data...")
@@ -321,7 +321,7 @@ demand_3 = ['Gas-to-Power', 'Gas-to-Power' ,'Gas-to-Power' ,'Gas-to-Power', 'Ind
 gtp = pd.DataFrame(index=index, columns=pd.MultiIndex.from_tuples(list(zip(demand_1, demand_2, demand_3))))
 
 for a, b, c in zip(demand_1, demand_2, demand_3):
-    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=False)
+    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=True)
     gtp.iloc[:, (gtp.columns.get_level_values(0)==a) & (gtp.columns.get_level_values(2)==c) & (gtp.columns.get_level_values(1)==b)] = l
 
 ind_cols = (gtp.columns.get_level_values(0)=='Demand') & (gtp.columns.get_level_values(1)=='#Netherlands') & (gtp.columns.get_level_values(2)=='Gas-to-Power')
@@ -338,7 +338,7 @@ for ii in range(len(index)):
         gtp.iloc[ii, ind_cols_2] = gtp.iloc[ii, ind_cols][0]
 
 gtp[pd.MultiIndex.from_tuples([('Demand','Germany','Gas-to-Power (calculated)')])] = gtp[pd.MultiIndex.from_tuples([('Demand','Germany','Industrial and Power')])].values - gtp[pd.MultiIndex.from_tuples([('Intermediate Calculation','#Germany','Gas-to-Power')])].values
-gtp[pd.MultiIndex.from_tuples([('Demand','','Total')])] = pd.DataFrame(gtp.iloc[:,[0,1,2,3,6,10]].sum(axis=1, skipna=False))
+gtp[pd.MultiIndex.from_tuples([('Demand','','Total')])] = pd.DataFrame(gtp.iloc[:,[0,1,2,3,6,10]].sum(axis=1, skipna=True))
 
 #%% LDZ
 print("Processing LDZ data...")
@@ -349,10 +349,10 @@ demand_3 = ['LDZ', 'LDZ', 'LDZ', 'Other', 'LDZ', 'LDZ', 'Austria', 'LDZ', 'Switz
 ldz = pd.DataFrame(index=index, columns=pd.MultiIndex.from_tuples(list(zip(demand_1, demand_2, demand_3))))
 
 for a, b, c in zip(demand_1, demand_2, demand_3):
-    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=False)
+    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=True)
     ldz.iloc[:, (ldz.columns.get_level_values(0)==a) & (ldz.columns.get_level_values(2)==c) & (ldz.columns.get_level_values(1)==b)] = l
 
-ldz[pd.MultiIndex.from_tuples([('Demand','','Total')])] = pd.DataFrame(ldz.iloc[:,[0,1,2,3,4,5,6,7,8,9,10]].sum(axis=1, skipna=False))
+ldz[pd.MultiIndex.from_tuples([('Demand','','Total')])] = pd.DataFrame(ldz.iloc[:,[0,1,2,3,4,5,6,7,8,9,10]].sum(axis=1, skipna=True))
 
 #%% Main panel: Daily historic data by category
 print("Processing country data...")
@@ -371,7 +371,7 @@ countries = pd.DataFrame(index=index, columns=pd.MultiIndex.from_tuples(list(zip
 for country in country_list:
     # Get all demand data for this country (regardless of subcategory)
     country_mask = (full_data.columns.get_level_values(2) == 'Demand') & (full_data.columns.get_level_values(3) == country)
-    country_total = full_data.iloc[:, country_mask].sum(axis=1, skipna=False)
+    country_total = full_data.iloc[:, country_mask].sum(axis=1, skipna=True)
     countries[('Demand', '', country)] = country_total
     
     # Debug: Check if we found any data for this country
@@ -383,7 +383,7 @@ for country in country_list:
 
 # Handle Island of Ireland separately (Net demand)
 ireland_mask = (full_data.columns.get_level_values(2) == 'Demand (Net)') & (full_data.columns.get_level_values(3) == 'Island of Ireland')
-ireland_total = full_data.iloc[:, ireland_mask].sum(axis=1, skipna=False) 
+ireland_total = full_data.iloc[:, ireland_mask].sum(axis=1, skipna=True) 
 countries[('Demand (Net)', '', 'Island of Ireland')] = ireland_total
 
 print("🎯 USING ORIGINAL PRECISE AGGREGATION METHOD WITH NORMALIZED DATA:")
@@ -412,7 +412,7 @@ for col in countries.columns:
             country_columns.append(col)
 
 if country_columns:
-    country_total = countries[country_columns].sum(axis=1, skipna=False)
+    country_total = countries[country_columns].sum(axis=1, skipna=True)
     print(f"   Found {len(country_columns)} country columns to sum")
 else:
     country_total = pd.Series(0.0, index=index)
@@ -476,7 +476,7 @@ if max_diff > 0.01:  # Very tight tolerance
     
     # Additional diagnostic information
     print(f"\n🔍 DIAGNOSTIC INFO:")
-    all_demand_total = full_data.iloc[:, full_data.columns.get_level_values(2)=='Demand'].sum(axis=1, skipna=False)
+    all_demand_total = full_data.iloc[:, full_data.columns.get_level_values(2)=='Demand'].sum(axis=1, skipna=True)
     print(f"   Raw total demand (all 'Demand' series): {all_demand_total[sample_idx]:.6f}")
     print(f"   Our country total: {total_col[sample_idx]:.6f}")
     print(f"   Difference from raw: {all_demand_total[sample_idx] - total_col[sample_idx]:.6f}")
@@ -502,10 +502,10 @@ demand_3 = ['France','Italy','Belgium','Netherlands','GB','Germany']
 lng = pd.DataFrame(index=index, columns=pd.MultiIndex.from_tuples(list(zip(demand_1, demand_2, demand_3))))
 
 for a, b, c in zip(demand_1, demand_2, demand_3):
-    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=False)
+    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=True)
     lng.iloc[:, (lng.columns.get_level_values(0)==a) & (lng.columns.get_level_values(2)==c) & (lng.columns.get_level_values(1)==b)] = l
 
-lng[('Import','','Total')] = lng.sum(axis=1, skipna=False)
+lng[('Import','','Total')] = lng.sum(axis=1, skipna=True)
 
 print("Processing calendar year analysis...")
 # Supply data processing (abbreviated for space)
@@ -516,10 +516,10 @@ demand_3 = ['Austria', 'Germany' ,'Europe' ,'Netherlands', 'GB' , '' , 'Italy', 
 supply = pd.DataFrame(index=index, columns=pd.MultiIndex.from_tuples(list(zip(demand_1, demand_2, demand_3))))
 
 for a, b, c in zip(demand_1, demand_2, demand_3):
-    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=False)
+    l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=True)
     supply.iloc[:, (supply.columns.get_level_values(0)==a) & (supply.columns.get_level_values(2)==c) & (supply.columns.get_level_values(1)==b)] = l
 
-supply[pd.MultiIndex.from_tuples([('Import','','Total')])] = pd.DataFrame(supply.iloc[:,list(range(13)) + [14]].sum(axis=1, skipna=False))
+supply[pd.MultiIndex.from_tuples([('Import','','Total')])] = pd.DataFrame(supply.iloc[:,list(range(13)) + [14]].sum(axis=1, skipna=True))
 
 print("Writing consolidated file with all 17 sheets...")
 
