@@ -491,7 +491,7 @@ for a, b, c in zip(demand_1, demand_2, demand_3):
     l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(4)==c) & (full_data.columns.get_level_values(3)==b)].sum(axis=1, skipna=False)
     lng.iloc[:, (lng.columns.get_level_values(0)==a) & (lng.columns.get_level_values(2)==c) & (lng.columns.get_level_values(1)==b)] = l
 
-lng[pd.MultiIndex.from_tuples([('Import','','Total')])] = lng.sum(axis=1, skipna=False)
+lng[('Import','','Total')] = lng.sum(axis=1, skipna=False)
 
 print("Processing calendar year analysis...")
 # Supply data processing (abbreviated for space)
