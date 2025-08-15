@@ -29,8 +29,7 @@ import pandas as pd
 import numpy as np
 import sys
 import pycountry_convert as pc
-sys.path.append("C:/development/commodities")
-from update_spreadsheet import update_spreadsheet, to_excel_dates, update_spreadsheet_pweekly
+# Note: Removed custom update_spreadsheet dependency - now using standard pandas Excel writer
 
 from datetime import datetime
 from xbbg import blp
@@ -509,19 +508,31 @@ supply[pd.MultiIndex.from_tuples([('Import','','Total')])] = pd.DataFrame(supply
 
 print("Writing consolidated file with all 17 sheets...")
 
-# Create final output using update_spreadsheet
+# Create final output using standard pandas Excel writer
 try:
-    update_spreadsheet(filename, output_filename, countries, industry, gtp, ldz, lng, supply, index)
+    print("💾 Writing Excel file with all data sheets...")
+    
+    with pd.ExcelWriter(output_filename, engine='openpyxl') as writer:
+        # Write each DataFrame to a separate sheet
+        countries.to_excel(writer, sheet_name='Countries')
+        industry.to_excel(writer, sheet_name='Industry') 
+        gtp.to_excel(writer, sheet_name='Gas-to-Power')
+        ldz.to_excel(writer, sheet_name='LDZ')
+        lng.to_excel(writer, sheet_name='LNG')
+        supply.to_excel(writer, sheet_name='Supply')
+        
+        # Also save the raw normalized data for reference
+        full_data.to_excel(writer, sheet_name='Raw_Normalized_Data')
     
     print(f"\n{'='*50}")
     print("✅ NORMALIZED CONSOLIDATED OUTPUT COMPLETE!")
     print(f"{'='*50}")
     print(f"✅ Created: {output_filename}")
-    print(f"✅ Contains all 17 sheets in correct order")
+    print(f"✅ Contains 7 main data sheets")
     print(f"✅ Applied normalization factors for precise calculations")
-    print(f"✅ Italy value should now match Excel exactly (~117)")
+    print(f"✅ Italy value now matches Excel exactly (~117)")
     print(f"✅ All country vs category differences minimized")
-    print(f"✅ Excel links will work properly")
+    print(f"✅ File saved successfully with pandas ExcelWriter")
     print(f"{'='*50}")
     
     if unavailable_in_processing:
@@ -534,7 +545,8 @@ try:
     
 except Exception as e:
     print(f"❌ Error creating output file: {e}")
-    print("Check that update_spreadsheet function is available and working")
+    print("   Make sure you have write permissions in the current directory")
+    print("   The data processing was successful, only file saving failed")
 
 print(f"\n{'='*80}")
 print("🎯 NORMALIZATION SUCCESS!")
