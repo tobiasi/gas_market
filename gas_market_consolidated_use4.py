@@ -375,8 +375,29 @@ gtp_total = get_category_total(gtp_keywords)
 
 # Calculate country total from individual countries (consistent method)
 print("\n🌍 Building Country total from individual countries...")
-country_total = countries[[(c, '', country) for c, _, country in countries.columns if country in country_list]].sum(axis=1, skipna=False)
-country_total += countries[('Demand (Net)', '', 'Island of Ireland')]  # Add Ireland
+
+# Get all country columns properly
+country_columns = []
+for col in countries.columns:
+    if len(col) == 3:  # Ensure it's a 3-tuple
+        category, middle, country = col
+        if country in country_list and category == 'Demand':
+            country_columns.append(col)
+
+print(f"   Found {len(country_columns)} country columns to sum")
+
+# Sum all country columns
+if country_columns:
+    country_total = countries[country_columns].sum(axis=1, skipna=False)
+else:
+    country_total = pd.Series(0.0, index=index)
+    print("   Warning: No country columns found!")
+
+# Add Ireland separately if it exists
+ireland_col = ('Demand (Net)', '', 'Island of Ireland')
+if ireland_col in countries.columns:
+    country_total += countries[ireland_col]
+    print("   Added Ireland (Net demand)")
 
 # Add all totals to countries DataFrame
 countries[pd.MultiIndex.from_tuples([('','','Total')])] = country_total
