@@ -524,7 +524,41 @@ supply[pd.MultiIndex.from_tuples([('Import','','Total')])] = pd.DataFrame(supply
 print("Writing consolidated file with all 17 sheets...")
 
 # Create final output using update_spreadsheet
+print(f"📁 Attempting to save to: {output_filename}")
+print(f"📁 Template file: {filename}")
+print(f"🔍 Checking if files exist and are accessible...")
+
+import os
 try:
+    # Check if template file exists
+    if os.path.exists(filename):
+        print(f"✅ Template file found: {filename}")
+    else:
+        print(f"❌ Template file not found: {filename}")
+    
+    # Check if output directory is writable
+    output_dir = os.path.dirname(output_filename) if os.path.dirname(output_filename) else '.'
+    if os.access(output_dir, os.W_OK):
+        print(f"✅ Output directory is writable: {output_dir}")
+    else:
+        print(f"❌ Output directory not writable: {output_dir}")
+    
+    # Check if output file already exists and is locked
+    if os.path.exists(output_filename):
+        print(f"⚠️  Output file already exists: {output_filename}")
+        try:
+            # Try to open for writing to check if it's locked
+            with open(output_filename, 'a'):
+                pass
+            print(f"✅ Output file is not locked")
+        except PermissionError:
+            print(f"❌ Output file is LOCKED (probably open in Excel)")
+            print(f"   Please close the file in Excel and try again")
+        except Exception as lock_e:
+            print(f"⚠️  Could not test file lock: {lock_e}")
+    
+    print(f"🚀 Calling update_spreadsheet function...")
+    
     update_spreadsheet(filename, output_filename, countries, industry, gtp, ldz, lng, supply, index)
     
     print(f"\n{'='*50}")
@@ -547,8 +581,29 @@ try:
     print("✅ Normalized script execution completed successfully!")
     
 except Exception as e:
-    print(f"❌ Error creating output file: {e}")
-    print("Check that update_spreadsheet function is available and working")
+    print(f"❌ ERROR CREATING OUTPUT FILE:")
+    print(f"   Error type: {type(e).__name__}")
+    print(f"   Error message: {str(e)}")
+    print(f"   Template file: {filename}")
+    print(f"   Output file: {output_filename}")
+    print(f"")
+    print(f"💡 COMMON SOLUTIONS:")
+    print(f"   1. Close the Excel file if it's open")
+    print(f"   2. Check file permissions in the directory")
+    print(f"   3. Make sure update_spreadsheet function is available")
+    print(f"   4. Try running as administrator if needed")
+    
+    # Also try to save a basic version as fallback
+    try:
+        print(f"\n🔄 Attempting fallback save with pandas...")
+        with pd.ExcelWriter(f"FALLBACK_{output_filename}", engine='openpyxl') as writer:
+            countries.to_excel(writer, sheet_name='Countries')
+            industry.to_excel(writer, sheet_name='Industry')
+            gtp.to_excel(writer, sheet_name='Gas-to-Power')
+            ldz.to_excel(writer, sheet_name='LDZ')
+        print(f"✅ Fallback file saved as: FALLBACK_{output_filename}")
+    except Exception as fallback_e:
+        print(f"❌ Fallback save also failed: {fallback_e}")
 
 print(f"\n{'='*80}")
 print("🎯 NORMALIZATION SUCCESS!")
