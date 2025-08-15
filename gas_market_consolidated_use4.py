@@ -341,60 +341,19 @@ ireland_mask = (full_data.columns.get_level_values(2) == 'Demand (Net)') & (full
 ireland_total = full_data.iloc[:, ireland_mask].sum(axis=1, skipna=False) 
 countries[('Demand (Net)', '', 'Island of Ireland')] = ireland_total
 
-print("🔧 IMPROVED CONSISTENT AGGREGATION METHOD:")
-print("   Building category totals directly from raw data...")
+print("🔧 REVERT TO ORIGINAL PRECISE AGGREGATION METHOD:")
+print("   Using existing DataFrames that match Excel SUMIFS logic...")
 
-# CONSISTENT METHOD: Build all totals from the same raw data using identical logic
-def get_category_total(category_descriptions):
-    """Get total for a category using consistent filtering logic"""
-    total = pd.Series(0.0, index=index)
-    
-    for desc in category_descriptions:
-        # Find all columns matching this description pattern
-        mask = full_data.columns.get_level_values(0).str.contains(desc, case=False, na=False)
-        if mask.any():
-            category_data = full_data.iloc[:, mask].sum(axis=1, skipna=False)
-            total += category_data
-            print(f"   Added {mask.sum()} series for '{desc}'")
-    
-    return total
+# REVERT: Use the precise DataFrames that were already built correctly
+# These match the Excel SUMIFS logic exactly (country + category filtering)
+print("\n🏭 Using Industrial total from industry DataFrame...")
+industrial_total = industry[('Demand','-','Total')]
 
-# Define category descriptions (EXPANDED to capture more series)
-industrial_keywords = [
-    'Industrial', 'industry', 'industrial and power',
-    'RLMmT', 'RLMoT',  # German industrial consumption codes
-    'Gas Industrial', 'Industrial Demand', 'Consumption'
-]
+print("\n🏘️ Using LDZ total from ldz DataFrame...")  
+ldz_total = ldz[('Demand','','Total')]
 
-ldz_keywords = [
-    'LDZ', 'ldz', 'Low Distribution Zone',
-    'Domestic', 'domestic', 'Public Distribution', 
-    'Gas Domestic', 'Local Distribution', 'SLP', 'Residual Load', 'PIRR'
-]
-
-gtp_keywords = [
-    'Gas-to-Power', 'gas-to-power', 'Power', 'electricity',
-    'Power Gen', 'Power Generation', 'HMS', 'PP'
-]
-
-# Additional category for flows and other series
-other_keywords = [
-    'Flow Exit', 'Flow Entry', 'Net Entry', 'Net Exit',
-    'Exit Allocation', 'Entry Allocation', 'Exports', 'Imports',
-    'Losses', 'Austria Gas', 'Switzerland', 'Luxembourg', 'Zebra'
-]
-
-print("\n🏭 Building Industrial total from raw data...")
-industrial_total = get_category_total(industrial_keywords)
-
-print("\n🏘️ Building LDZ total from raw data...")
-ldz_total = get_category_total(ldz_keywords)
-
-print("\n⚡ Building Gas-to-Power total from raw data...")
-gtp_total = get_category_total(gtp_keywords)
-
-print("\n🌐 Building Other/Flows total from raw data...")
-other_total = get_category_total(other_keywords)
+print("\n⚡ Using Gas-to-Power total from gtp DataFrame...")
+gtp_total = gtp[('Demand','','Total')]
 
 # Calculate country total from individual countries (consistent method)
 print("\n🌍 Building Country total from individual countries...")
@@ -427,22 +386,20 @@ countries[('', '', 'Total')] = country_total
 countries[('', '', 'Industrial')] = industrial_total
 countries[('', '', 'LDZ')] = ldz_total
 countries[('', '', 'Gas-to-Power')] = gtp_total
-countries[('', '', 'Other/Flows')] = other_total
 
-# ENHANCED DEBUG: Check if sums add up with EXPANDED categories
-print("\n🔍 ENHANCED DEBUGGING WITH EXPANDED CATEGORIES...")
+# ENHANCED DEBUG: Check if sums add up with ORIGINAL precise method
+print("\n🔍 ENHANCED DEBUGGING WITH ORIGINAL PRECISE METHOD...")
 total_col = countries[('','','Total')]
 industrial_col = countries[('','','Industrial')]
 ldz_col = countries[('','','LDZ')]
 gtp_col = countries[('','','Gas-to-Power')]
-other_col = countries[('','','Other/Flows')]
 
-manual_sum = industrial_col + ldz_col + gtp_col + other_col
+manual_sum = industrial_col + ldz_col + gtp_col
 difference = total_col - manual_sum
 max_diff = abs(difference).max()
 
-print(f"📊 EXPANDED CATEGORY AGGREGATION RESULTS:")
-print(f"   Country Total vs (Industrial + LDZ + GTP + Other/Flows)")
+print(f"📊 ORIGINAL PRECISE AGGREGATION RESULTS:")
+print(f"   Country Total vs (Industrial + LDZ + GTP)")
 print(f"   Maximum difference: {max_diff:.6f}")
 print(f"   Mean difference: {difference.mean():.6f}")
 print(f"   Standard deviation: {difference.std():.6f}")
@@ -464,7 +421,6 @@ if max_diff > 0.1:  # Lower tolerance for better validation
     print(f"   Industrial: {industrial_col[sample_idx]:.6f}")
     print(f"   LDZ: {ldz_col[sample_idx]:.6f}")  
     print(f"   Gas-to-Power: {gtp_col[sample_idx]:.6f}")
-    print(f"   Other/Flows: {other_col[sample_idx]:.6f}")
     print(f"   Sum: {manual_sum[sample_idx]:.6f}")
     print(f"   Difference: {difference[sample_idx]:.6f}")
     
