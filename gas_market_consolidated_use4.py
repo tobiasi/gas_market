@@ -399,11 +399,11 @@ if ireland_col in countries.columns:
     country_total += countries[ireland_col]
     print("   Added Ireland (Net demand)")
 
-# Add all totals to countries DataFrame
-countries[pd.MultiIndex.from_tuples([('','','Total')])] = country_total
-countries[pd.MultiIndex.from_tuples([('','','Industrial')])] = industrial_total
-countries[pd.MultiIndex.from_tuples([('','','LDZ')])] = ldz_total
-countries[pd.MultiIndex.from_tuples([('','','Gas-to-Power')])] = gtp_total
+# Add all totals to countries DataFrame with correct 3-level structure
+countries[('', '', 'Total')] = country_total
+countries[('', '', 'Industrial')] = industrial_total
+countries[('', '', 'LDZ')] = ldz_total
+countries[('', '', 'Gas-to-Power')] = gtp_total
 
 # ENHANCED DEBUG: Check if sums add up with detailed analysis
 print("\n🔍 ENHANCED DEBUGGING WITH CONSISTENT AGGREGATION...")
