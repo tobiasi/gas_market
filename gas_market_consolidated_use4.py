@@ -4,9 +4,16 @@ CONSOLIDATED VERSION FOR USE4.xlsx - Outputs single file with all 17 sheets
 Adapted for new use4.xlsx structure without 'Replace blanks with #N/A' column
 """
 
+import warnings
+import pandas as pd
+# Suppress pandas warnings for cleaner output
+warnings.filterwarnings('ignore', category=FutureWarning)
+warnings.filterwarnings('ignore', category=pd.errors.PerformanceWarning)
+warnings.filterwarnings('ignore', category=UserWarning)
+pd.options.mode.chained_assignment = None  # Suppress SettingWithCopyWarning
+
 import numpy as np
 import os
-import pandas as pd
 import datetime
 import xlrd
 
@@ -74,10 +81,38 @@ if 'Replace blanks with #N/A' not in dataset.columns:
 
 tickers = list(set(dataset.Ticker.dropna().to_list()))
 print(f"Found {len(tickers)} unique tickers")
-data = blp.bdh(tickers, start_date="2016-10-01", flds="PX_LAST").droplevel(axis=1, level=1)
+
+# Download Bloomberg data with error tracking
+try:
+    data = blp.bdh(tickers, start_date="2016-10-01", flds="PX_LAST").droplevel(axis=1, level=1)
+    available_tickers = set(data.columns)
+    requested_tickers = set(tickers)
+    missing_tickers = requested_tickers - available_tickers
+    
+    print(f"✅ Bloomberg data downloaded successfully")
+    print(f"📊 Available tickers: {len(available_tickers)}")
+    
+    if missing_tickers:
+        print(f"❌ Missing tickers from Bloomberg: {len(missing_tickers)}")
+        print("Missing tickers list:")
+        for i, ticker in enumerate(sorted(missing_tickers), 1):
+            print(f"  {i:2d}. {ticker}")
+        print()
+    else:
+        print("✅ All tickers available in Bloomberg data")
+        
+except Exception as e:
+    print(f"❌ Error downloading Bloomberg data: {e}")
+    # Create empty DataFrame as fallback
+    data = pd.DataFrame()
+    available_tickers = set()
+    missing_tickers = set(tickers)
 
 print("Processing ticker data...")
 full_data = pd.DataFrame()
+unavailable_in_processing = []
+successful_tickers = []
+
 for row in range(len(dataset)):
     information = dataset.loc[row]
     
@@ -93,13 +128,30 @@ for row in range(len(dataset)):
         if pd.isna(norm_factor):
             norm_factor = 1.0
             
-        temp_df = data[[ticker]] * norm_factor
+        if ticker in data.columns:
+            temp_df = data[[ticker]] * norm_factor
+            successful_tickers.append(ticker)
+        else:
+            # Create empty series for missing ticker
+            temp_df = pd.DataFrame(columns=[ticker], index=data.index if not data.empty else pd.date_range('2016-10-01', periods=100, freq='D'))
+            unavailable_in_processing.append({
+                'ticker': ticker,
+                'description': information.get('Description', 'Unknown'),
+                'category': information.get('Category', 'Unknown'),
+                'row': row
+            })
+            
     except KeyError:
-        print(f"Warning: Ticker {ticker} not found in Bloomberg data")
-        temp_df = pd.DataFrame(columns=[ticker], index=data.index)
+        temp_df = pd.DataFrame(columns=[ticker], index=data.index if not data.empty else pd.date_range('2016-10-01', periods=100, freq='D'))
+        unavailable_in_processing.append({
+            'ticker': ticker,
+            'description': information.get('Description', 'Unknown'),
+            'category': information.get('Category', 'Unknown'),
+            'row': row
+        })
     except Exception as e:
-        print(f"Error processing {ticker}: {e}")
-        temp_df = pd.DataFrame(columns=[ticker], index=data.index)
+        print(f"❌ Unexpected error processing {ticker}: {e}")
+        temp_df = pd.DataFrame(columns=[ticker], index=data.index if not data.empty else pd.date_range('2016-10-01', periods=100, freq='D'))
 
     # Handle missing values based on 'Replace blanks with #N/A' setting
     replace_blanks = information.get('Replace blanks with #N/A', 'N')
@@ -160,6 +212,37 @@ full_data.iloc[:-1] = full_data.iloc[:-1].interpolate(limit=2, limit_area='insid
 
 full_data.index = pd.to_datetime(full_data.index)
 full_data = full_data[~((full_data.index.month == 2) & (full_data.index.day == 29))]
+
+# DETAILED TICKER AVAILABILITY REPORT
+print(f"\n{'='*60}")
+print("📊 TICKER AVAILABILITY REPORT")
+print(f"{'='*60}")
+print(f"✅ Total tickers requested: {len(tickers)}")
+print(f"✅ Successfully processed: {len(successful_tickers)}")
+print(f"❌ Unavailable tickers: {len(unavailable_in_processing)}")
+
+if unavailable_in_processing:
+    print(f"\n{'='*60}")
+    print("❌ UNAVAILABLE TICKERS DETAILS:")
+    print(f"{'='*60}")
+    print(f"{'#':<3} {'Ticker':<15} {'Description':<50} {'Category':<20}")
+    print("-" * 90)
+    
+    for i, info in enumerate(unavailable_in_processing, 1):
+        ticker = info['ticker'][:14]  # Truncate if too long
+        desc = info['description'][:49] if len(str(info['description'])) > 49 else str(info['description'])
+        cat = info['category'][:19] if len(str(info['category'])) > 19 else str(info['category'])
+        print(f"{i:<3} {ticker:<15} {desc:<50} {cat:<20}")
+    
+    print(f"\n💡 TIP: You may want to:")
+    print("   1. Check if these tickers are correctly spelled")
+    print("   2. Verify if they're active Bloomberg tickers")
+    print("   3. Check if they need different Bloomberg fields")
+    print("   4. Consider if they should be removed from the ticker list")
+    
+print(f"\n{'='*60}")
+print("🔄 CONTINUING WITH AVAILABLE DATA...")
+print(f"{'='*60}\n")
 
 #%% Industry
 print("Processing industry data...")
@@ -568,4 +651,13 @@ print("✅ Enhanced error handling for missing data")
 print("✅ Excel links will work properly")
 print(f"{'='*50}")
 
+# FINAL TICKER SUMMARY
+if unavailable_in_processing:
+    print(f"\n⚠️  SUMMARY: {len(unavailable_in_processing)} unavailable tickers detected")
+    print("   Check the detailed report above for ticker names and descriptions")
+    print("   The script continued successfully with available data")
+else:
+    print(f"\n✅ All {len(successful_tickers)} tickers processed successfully!")
+
+print(f"\n📁 Output file: {output_filename}")
 print("Script execution completed!")
