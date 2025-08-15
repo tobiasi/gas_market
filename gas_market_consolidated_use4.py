@@ -328,10 +328,51 @@ for a, b, c in zip(demand_1, demand_2, demand_3):
     l = full_data.iloc[:, (full_data.columns.get_level_values(2)==a) & (full_data.columns.get_level_values(3)==c)].sum(axis=1, skipna=False)
     countries.iloc[:, (countries.columns.get_level_values(0)==a) & (countries.columns.get_level_values(2)==c)] = l
 
+# Calculate totals - with debugging
 countries[pd.MultiIndex.from_tuples([('','','Total')])] = pd.DataFrame(countries.iloc[:,[0,1,2,3,4,5,6,7,8,9]].sum(axis=1, skipna=False))
 countries[pd.MultiIndex.from_tuples([('','','Industrial')])] = industry.iloc[:,industry.columns.get_level_values(2)=='Total']
 countries[pd.MultiIndex.from_tuples([('','','LDZ')])] = ldz.iloc[:,ldz.columns.get_level_values(2)=='Total']
 countries[pd.MultiIndex.from_tuples([('','','Gas-to-Power')])] = gtp.iloc[:,gtp.columns.get_level_values(2)=='Total']
+
+# DEBUG: Check if sums add up
+print("\n🔍 DEBUGGING DEMAND TOTALS...")
+total_col = countries[('','','Total')]
+industrial_col = countries[('','','Industrial')]
+ldz_col = countries[('','','LDZ')]
+gtp_col = countries[('','','Gas-to-Power')]
+
+manual_sum = industrial_col + ldz_col + gtp_col
+difference = total_col - manual_sum
+max_diff = abs(difference).max()
+
+print(f"📊 Sum verification:")
+print(f"   Country Total vs (Industrial + LDZ + GTP)")
+print(f"   Maximum difference: {max_diff:.4f}")
+print(f"   Mean difference: {difference.mean():.4f}")
+
+if max_diff > 1.0:  # If difference is significant
+    print(f"⚠️  SIGNIFICANT DIFFERENCES DETECTED!")
+    print(f"   This suggests data categorization issues")
+    
+    # Show a sample of the problematic data
+    sample_idx = abs(difference).idxmax()
+    print(f"\n   Worst case on {sample_idx}:")
+    print(f"   Total: {total_col[sample_idx]:.2f}")
+    print(f"   Industrial: {industrial_col[sample_idx]:.2f}")
+    print(f"   LDZ: {ldz_col[sample_idx]:.2f}")  
+    print(f"   Gas-to-Power: {gtp_col[sample_idx]:.2f}")
+    print(f"   Sum: {manual_sum[sample_idx]:.2f}")
+    print(f"   Difference: {difference[sample_idx]:.2f}")
+    
+    # Check for potential causes
+    print(f"\n💡 POTENTIAL CAUSES:")
+    print(f"   1. Missing/unavailable tickers affecting categories differently")
+    print(f"   2. Data classification differences (some data not in Industrial/LDZ/GTP)")
+    print(f"   3. Double counting in country totals")
+    print(f"   4. Different date ranges between datasets")
+    
+else:
+    print(f"✅ Sums match within acceptable tolerance!")
 
 last_index = countries.apply(lambda x: x[x.notnull()].index[-1]).sort_values().values[0]
 countries = countries.loc[:last_index]
