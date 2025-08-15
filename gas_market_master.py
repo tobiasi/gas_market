@@ -22,8 +22,8 @@ def create_demand_tab(target_data):
     print("🏠 CREATING DEMAND TAB")
     print("=" * 60)
     
-    # Load the correct column mapping from our analysis
-    with open('analysis_results.json', 'r') as f:
+    # Load the CORRECTED column mapping from our analysis
+    with open('corrected_analysis_results.json', 'r') as f:
         analysis = json.load(f)
     
     target_values = analysis['target_values']

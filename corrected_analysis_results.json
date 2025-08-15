@@ -1,0 +1,25 @@
+{
+  "target_values": {
+    "Italy": 151.4659795006551,
+    "Netherlands": 76.89155673229693,
+    "GB": 163.86,
+    "Austria": 20.64725134432316,
+    "Total": 767.6925372545071
+  },
+  "column_mapping": {
+    "France": 2,
+    "Belgium": 3,
+    "Italy": 4,
+    "Netherlands": 5,
+    "GB": 6,
+    "Austria": 7,
+    "Germany": 8,
+    "Switzerland": 9,
+    "Luxembourg": 10,
+    "Island of Ireland": 11,
+    "Total": 12,
+    "Industrial": 13,
+    "LDZ": 14,
+    "Gas-to-Power": 15
+  }
+}
