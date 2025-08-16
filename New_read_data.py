@@ -586,7 +586,7 @@ union = pd.MultiIndex.from_tuples([('','','LDZ')]).union( pd.MultiIndex.from_tup
 Demand         = countries[union].rolling(7).mean()
 Demand.index   = pd.to_datetime(Demand.index)
 Demand.columns = Demand.columns.get_level_values(2)
-Demand['Total'] = Demand.sum(axis=1)
+Demand['Total'] = Demand.sum(axis=1, skipna=False)
 Demand         = Demand.pct_change(365)
 
 
@@ -681,7 +681,7 @@ nor_main = nor_main.reindex(nor.index).fillna(0)
 
 # Apply adjustments
 nor_main[('Import', 'Norway', 'Europe')] = nor[('Import', 'Norway', 'Europe')]
-new_supply[('Import', 'Norway', 'Europe')] = nor_main.sum(axis=1) + 10.26 - 20
+new_supply[('Import', 'Norway', 'Europe')] = nor_main.sum(axis=1, skipna=False) + 10.26 - 20
 
 
 # Dutch production forecast
@@ -725,7 +725,7 @@ for col in columns[2:]:
     new_supply[col] = expanded_supply + mean_deviation
 
 # Calculate total supply
-new_supply.iloc[:, -1] = new_supply.iloc[:, :-1].sum(axis=1)
+new_supply.iloc[:, -1] = new_supply.iloc[:, :-1].sum(axis=1, skipna=False)
 
 # Demand forecast with independent decline factors
 years_demand = [2022, 2023, 2024, 2025, 2026]
@@ -885,7 +885,7 @@ Demand.index = pd.to_datetime(Demand.index)
 # Remove leap year
 Demand = Demand[~((Demand.index.month == 2) & (Demand.index.day == 29))]
 
-Demand['total_demand'] = Demand.sum(axis=1)
+Demand['total_demand'] = Demand.sum(axis=1, skipna=False)
 
 
 demand_out = Demand.resample('M').mean().diff(12).copy()
@@ -911,7 +911,7 @@ Supply = Supply[~((Supply.index.month == 2) & (Supply.index.day == 29))]
 
 # Russia supply
 supp = supply.copy()
-supply_russia = supp[pd.MultiIndex.from_tuples([('Import','Russia','Austria'),('Import','Russia','Germany')])].sum(axis=1)
+supply_russia = supp[pd.MultiIndex.from_tuples([('Import','Russia','Austria'),('Import','Russia','Germany')])].sum(axis=1, skipna=False)
 Supply_r        = pd.DataFrame(supply_russia.values,columns=['total_supply_russia'],index=supply_russia.index)
 Supply_r.index = pd.to_datetime(Supply_r.index)
 
@@ -1048,7 +1048,7 @@ id_country = [0,1,2,3,4,5,6,7,8,9,10]
 countries  = ldz.iloc[:,id_country]
 
 Countries_LDZ          = pd.DataFrame(countries.values,columns=['France','Belgium','Italy1','Italy2','Netherlands','UK','Austria','Germany','Switzerland','Luxembourg','Ireland'],index=countries.index)
-Countries_LDZ['Italy'] = Countries_LDZ[['Italy1','Italy2']].sum(axis=1).values
+Countries_LDZ['Italy'] = Countries_LDZ[['Italy1','Italy2']].sum(axis=1, skipna=False).values
 Countries_LDZ.drop(columns=['Italy1','Italy2'],inplace=True)
 
 Countries_LDZ.index = pd.to_datetime(Countries_LDZ.index)
