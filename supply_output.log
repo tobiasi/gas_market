@@ -1,3 +1,0 @@
-/Users/ruslebiffen/anaconda3/lib/python3.10/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
-  from pandas.core import (
-2025-08-18 11:06:19,058 - INFO - Loading MultiTicker sheet from use4.xlsx
