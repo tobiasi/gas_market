@@ -11,6 +11,9 @@ This unified system integrates:
 Maintains perfect demand-side validation targets while adding comprehensive supply analysis.
 """
 
+import sys
+sys.path.append("C:/development/commodities")
+
 import pandas as pd
 import numpy as np
 import logging

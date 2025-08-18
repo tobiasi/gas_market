@@ -10,6 +10,9 @@ Creates a new Excel file with MultiTicker sheet structure that:
 5. Ensures compatibility with existing master aggregation pipeline
 """
 
+import sys
+sys.path.append("C:/development/commodities")
+
 import pandas as pd
 import numpy as np
 import openpyxl
