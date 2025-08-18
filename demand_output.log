@@ -1,0 +1,38 @@
+/Users/ruslebiffen/anaconda3/lib/python3.10/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+2025-08-18 10:47:07,734 - INFO - Loading MultiTicker sheet from use4.xlsx
+2025-08-18 10:47:31,840 - INFO - Loaded 3377 dates with 456 tickers
+2025-08-18 10:47:31,866 - INFO - Creating daily historic data aggregation
+2025-08-18 10:47:31,870 - INFO - Found data for France using alias 'France' with category 'Demand'
+2025-08-18 10:47:31,875 - INFO - Found data for Belgium using alias 'Belgium' with category 'Demand'
+2025-08-18 10:47:31,877 - INFO - Found data for Italy using alias 'Italy' with category 'Demand'
+2025-08-18 10:47:31,880 - INFO - Found data for Netherlands using alias 'Netherlands' with category 'Demand'
+2025-08-18 10:47:31,882 - INFO - Found data for GB using alias 'GB' with category 'Demand'
+2025-08-18 10:47:31,885 - INFO - Found data for Austria using alias 'Austria' with category 'Demand'
+2025-08-18 10:47:31,887 - INFO - Found data for Germany using alias 'Germany' with category 'Demand'
+2025-08-18 10:47:31,890 - INFO - Found data for Switzerland using alias 'Switzerland' with category 'Demand'
+2025-08-18 10:47:31,892 - INFO - Found data for Luxembourg using alias 'Luxembourg' with category 'Demand'
+2025-08-18 10:47:31,894 - INFO - Found data for Island of Ireland using alias 'Island of Ireland' with category 'Demand (Net)'
+2025-08-18 10:47:31,901 - INFO - Created daily historic data with 3377 rows
+2025-08-18 10:47:31,901 - INFO - Validating results against known values
+2025-08-18 10:47:31,910 - WARNING - Date 2016-10-01 not found in results
+2025-08-18 10:47:31,912 - INFO - ✓ 2016-10-03 France: 90.13 (expected 90.13)
+2025-08-18 10:47:31,912 - INFO - ✓ 2016-10-03 Belgium: 38.16 (expected 38.16)
+2025-08-18 10:47:31,912 - INFO - ✓ 2016-10-03 Total: 715.22 (expected 715.22)
+2025-08-18 10:47:31,966 - INFO - Exported results to daily_historic_data_by_category_output.csv
+2025-08-18 10:47:31,966 - INFO - 
+Sample output (first 5 rows):
+2025-08-18 10:47:31,991 - INFO - 
+Sample output (dates around 2016-10-01):
+         Date  France  Belgium   Italy  ...   Total  Industrial  LDZ  Gas_to_Power
+0  2016-10-03   90.13    38.16  148.39  ...  715.22         0.0  0.0           0.0
+1  2016-10-04   92.57    41.06  151.47  ...  767.69         0.0  0.0           0.0
+2  2016-10-05   98.36    43.53  153.79  ...  808.72         0.0  0.0           0.0
+3  2016-10-06  110.85    46.91  159.52  ...  878.44         0.0  0.0           0.0
+4  2016-10-07  113.54    45.54  156.44  ...  877.29         0.0  0.0           0.0
+
+[5 rows x 15 columns]
+         Date  France  Belgium   Italy   Total
+0  2016-10-03   90.13    38.16  148.39  715.22
+1  2016-10-04   92.57    41.06  151.47  767.69
+2  2016-10-05   98.36    43.53  153.79  808.72

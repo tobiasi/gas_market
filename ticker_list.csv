@@ -1,0 +1,42 @@
+ticker,suffix,row_in_source,col_in_source,description_above,description_below,description_left,description_right
+ACDEGSTL Index,Index,10,2,Ticker,AGGMBAME Index,1,Germany Gas Generation Daily Total (EEX)
+AGGMBAME Index,Index,11,2,ACDEGSTL Index,AGGMBAMX Index,2,Baumgarten MAB Daily Gas Flow Entry (SK>AT)
+AGGMBAMX Index,Index,12,2,AGGMBAME Index,AGGMBMNI Index,3,Baumgarten MAB Daily Gas Flow Exit (AT>SK)
+AGGMBMNI Index,Index,13,2,AGGMBAMX Index,AGGMEDEG Index,4,Baumgarten MAB Intraday Net Entry Gas Flow (Austria - Slovakia)
+AGGMEDEG Index,Index,14,2,AGGMBMNI Index,AGGMEPOH Index,5,Austria Gas East Area Daily Demand Sum in GWh
+AGGMEPOH Index,Index,15,2,AGGMEDEG Index,AGGMEPRH Index,6,Austria Gas Daily Production by OMV
+AGGMEPRH Index,Index,16,2,AGGMEPOH Index,AGGMTDEG Index,7,Austria Gas Daily Production by RAG
+AGGMTDEG Index,Index,17,2,AGGMEPRH Index,AGGMVDEG Index,8,Austria Gas Tyrol Area Daily Demand Sum in GWh
+AGGMVDEG Index,Index,18,2,AGGMTDEG Index,SGIE7FIN Index,9,Austria Gas Vorarlberg Area Daily Demand Sum in GWh
+SGIE7FIN Index,Index,19,2,AGGMVDEG Index,SGIE7FWI Index,10,7 Fields  Injection
+SGIE7FWI Index,Index,20,2,SGIE7FIN Index,VNGSBLSL Index,11,7 Fields  Withdrawal
+VNGSBLSL Index,Index,21,2,SGIE7FWI Index,VNGSBLNW Index,12,Bad Lauchstaedt Gas Storage Levels (VNG-Germany)
+VNGSBLNW Index,Index,22,2,VNGSBLSL Index,SGIEBBIN Index,13,Bad Lauchstaedt Net Wtd
+SGIEBBIN Index,Index,23,2,VNGSBLNW Index,SGIEBBWI Index,14,Berlin (BES) Injection
+SGIEBBWI Index,Index,24,2,SGIEBBIN Index,EGFG0283 Index,15,Berlin (BES) Withdrawal
+EGFG0283 Index,Index,25,2,SGIEBBWI Index,EGFG0285 Index,16,RC Basel Gas Flow Exit (terranets bw) -DE NCG>CH
+EGFG0285 Index,Index,26,2,EGFG0283 Index,VNGSBESL Index,17,RC Thayngen-Fallentor Gas Flow Exit (terranets bw) -DE NCG>CH
+VNGSBESL Index,Index,27,2,EGFG0285 Index,VNGSBENW Index,18,Bernburg Gas Storage Levels (VNG-Germany)
+VNGSBENW Index,Index,28,2,VNGSBESL Index,SGIEBIIN Index,19,Bernburg Net Wtd
+SGIEBIIN Index,Index,29,2,VNGSBENW Index,ETGFGUPH Index,20,Bierwang  Injection
+ETGFGUPH Index,Index,30,2,SGIEBIIN Index,ETGFGUPL Index,21,Gasunie Deutschland Aggregate Production H-Gas (Gasunie) (GWh/d)
+ETGFGUPL Index,Index,31,2,ETGFGUPH Index,ETGFNOAP Index,22,Gasunie Deutschland  Aggregate Production L-Gas (Gasunie) (GWh/d)
+ETGFNOAP Index,Index,32,2,ETGFGUPL Index,ETGFOGAP Index,23,Nowega Aggregate Production (Nowega) (GWh/d)
+ETGFOGAP Index,Index,33,2,ETGFNOAP Index,ETGFONAP Index,24,Open Grid Europe Aggregate Production (OGE) (GWh/d)
+ETGFONAP Index,Index,34,2,ETGFOGAP Index,ETGFTGPH Index,25,ONTRAS Aggregate Production (ONTRAS) (GWh/d)
+ETGFTGPH Index,Index,35,2,ETGFONAP Index,ETGFTGPL Index,26,Thyssengas Aggregate Production H-Gas (Thyssengas) (GWh/d)
+ETGFTGPL Index,Index,36,2,ETGFTGPH Index,FGRTJRAQ Index,27,Thyssengas Aggregate Production L-Gas (Thyssengas) (GWh/d)
+FGRTJRAQ Index,Index,37,2,ETGFTGPL Index,FLXGGDNP Index,28,"Jura (FR to CH) Gas Exit Allocation (Daily,GWh/d,GRTgaz)"
+FLXGGDNP Index,Index,38,2,FGRTJRAQ Index,FLXGLTNP Index,29,"Bras/Petange (LU to BE) Gas Net Entry Physical Flow (Daily,GWh/d,Fluxys)"
+FLXGLTNP Index,Index,39,2,FLXGGDNP Index,FLXGZ2NP Index,30,"Zeebrugge LNG Belgium Net Entry Physical Flow (Daily,GWh/d,Fluxys)"
+FLXGZ2NP Index,Index,40,2,FLXGLTNP Index,FLXGZTNP Index,31,Zelzate 2 Net Entry Daily Physical Flow (Fluxys)(GWh/d)(NL>BE)
+FLXGZTNP Index,Index,41,2,FLXGZ2NP Index,FRGCADIC Index,32,"Zeebrugge ZPT (NO to BE) Gas Net Entry Physical Flow (Daily,GWh/d,Fluxys)"
+FRGCADIC Index,Index,42,2,FLXGZTNP Index,FRGCNDCC Index,33,"France Gas Industrial non HMS Demand (Daily,GWh/d,GRTgaz)"
+FRGCNDCC Index,Index,43,2,FRGCADIC Index,FRGCPIRA Index,34,"France Gas Industrial HMS Demand (Daily,GWh/d,GRTgaz)"
+FRGCPIRA Index,Index,44,2,FRGCNDCC Index,FRGCSDPD Index,35,"France Gas Domestic Demand (PIRR) (Daily,GWh/d,GRTgaz)"
+FRGCSDPD Index,Index,45,2,FRGCPIRA Index,FRGFDPDF Index,36,"France Gas Domestic Demand (Public Distribution) (Daily,GWh/d,GRTgaz)"
+FRGFDPDF Index,Index,46,2,FRGCSDPD Index,FRGFFPDF Index,37,"Dunkerque (NO to FR) Gas PIR Net Entry Physical Flow (Daily,GWh/d,GRTgaz)"
+FRGFFPDF Index,Index,47,2,FRGFDPDF Index,FRGFFPGN Index,38,"Fos LNG France Gas Entry Physical Flow (Daily,GWh/d,GRTgaz)"
+FRGFFPGN Index,Index,48,2,FRGFFPDF Index,FRGFLHDF Index,39,"Dunkerque LNG France Gas Entry Physical Flow (Daily,GWh/d,GRTgaz)"
+FRGFLHDF Index,Index,49,2,FRGFFPGN Index,FRGFNPDF Index,40,"Le Havre LNG France Gas Entry Physical Flow (Daily,GWh/d,GRTgaz)"
+FRGFNPDF Index,Index,50,2,FRGFLHDF Index,FRGFOPDF Index,41,"Montoir LNG France Gas Entry Physical Flow (Daily,GWh/d,GRTgaz)"

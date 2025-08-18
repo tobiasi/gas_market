@@ -131,3 +131,59 @@ python test_bloomberg_production.py
 - **GitHub**: https://github.com/tobiasi/gas_market.git
 
 **This Bloomberg-based gas market processing system is now production-ready with excellent accuracy and stability!** 🚀
+- MultiTicker Tab Creation Task
+
+## Objective
+Create a MultiTicker tab that downloads Bloomberg data using the ticker list from the 'use4' sheet in the Excel file.
+
+## Context
+I've successfully completed the European Gas Demand Aggregation pipeline that processes MultiTicker data. The master aggregation script perfectly processes MultiTicker data format and produces exact Excel matches for all gas demand categories. Now I need to create the actual MultiTicker tab with downloaded data.
+
+## Input File
+- **European Gas Demand Aggregation.xlsx** (to be uploaded)
+
+## Requirements
+
+### 1. Ticker List Extraction
+- Extract Bloomberg ticker list from the 'use4' sheet
+- Identify all tickers in Bloomberg format (containing 'Index', 'Comdty', 'BGN', etc.)
+- Clean and validate ticker symbols
+
+### 2. MultiTicker Tab Structure
+Create a new sheet with:
+- **Date column** (Column A)
+- **One column per ticker** (subsequent columns)
+- **3-row metadata headers** (matching existing MultiTicker format):
+  - Row 1: Ticker symbols
+  - Row 2: Description/metadata
+  - Row 3: Units/additional info
+- **Daily data rows** starting from row 4
+
+### 3. Data Download Preparation
+- Set up structure for Bloomberg data integration
+- Prepare date range (historical data coverage)
+- Format columns for numerical data
+- Handle missing data appropriately
+
+### 4. Output Requirements
+- **multiticker_tab.xlsx** - New Excel file with MultiTicker sheet
+- **ticker_list.csv** - Extracted ticker list for reference
+- **multiticker_creation_script.py** - Python script that creates the tab
+
+## Expected Deliverables
+1. Python script that extracts tickers from use4 sheet
+2. MultiTicker tab creation with proper formatting
+3. Ready-to-use structure for Bloomberg data population
+4. Validation that format matches existing MultiTicker data expectations
+
+## Technical Notes
+- Maintain compatibility with existing master aggregation script
+- Follow Excel formatting conventions from original file
+- Ensure date formatting consistency
+- Prepare for large dataset handling (multi-year daily data)
+
+## Success Criteria
+- All tickers extracted from use4 sheet
+- MultiTicker tab created with proper 3-row header structure
+- Format compatible with existing data processing pipeline
+- Ready for Bloomberg data integration
