@@ -1,0 +1,60 @@
+column,country,original_category,corrected_category,correction_type,reason,split_method,processing_type,reassignment_logic
+Col_31,Netherlands,Zebra,Industrial,zebra_to_industrial,Domain expertise: Zebra represents actual industrial consumption,,,
+Col_73,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_74,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_75,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_76,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_93,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_94,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_95,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_96,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_111,Netherlands,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,intermediate_calc,,
+Col_368,Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_369,Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_370,Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_371,Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_31,Netherlands,Industrial,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_82,Netherlands,Gas-to-Power,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_107,Netherlands,Gas-to-Power,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_108,Netherlands,Gas-to-Power,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_109,Netherlands,Industrial,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_110,Netherlands,Industrial,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_111,Netherlands,Industrial and Power,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_112,Netherlands,LDZ,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_113,Netherlands,LDZ,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_114,Netherlands,LDZ,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_115,Netherlands,LDZ,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_118,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_119,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_193,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_194,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_195,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_196,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_197,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_198,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_203,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_204,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_205,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_228,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_229,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_230,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_243,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_247,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_248,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_249,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_430,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_450,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_451,Netherlands,Netherlands,,netherlands_complex,Netherlands complex reporting requires position-based processing,,gas_to_power,netherlands_complex
+Col_73,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_74,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_75,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_76,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_93,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_94,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_95,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_96,#Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_111,Netherlands,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,intermediate_calc,,
+Col_368,Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_369,Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_370,Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
+Col_371,Germany,Industrial and Power,,industrial_power_split,Expert splitting of combined Bloomberg category,subtract_gtp,,
