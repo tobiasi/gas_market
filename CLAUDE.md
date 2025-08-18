@@ -187,3 +187,191 @@ Create a new sheet with:
 - MultiTicker tab created with proper 3-row header structure
 - Format compatible with existing data processing pipeline
 - Ready for Bloomberg data integration
+- 🔄 REVERT TASK: Restore Working Demand-Side + Add Supply-Side Separately
+
+## 🚨 **CRITICAL ISSUE IDENTIFIED**
+The demand-side processing that was previously **PERFECT** is now completely broken:
+- France: 220.73 vs target 90.13 (❌ FAIL, diff: 130.60)
+- Total: 1346.59 vs target 715.22 (❌ FAIL, diff: 631.37) 
+- LDZ: 937.11 vs target 307.80 (❌ FAIL, diff: 629.31)
+
+## 🎯 **TASK OBJECTIVE**
+1. **REVERT** to the last working version that had perfect demand-side processing
+2. **PRESERVE** the working demand-side logic completely
+3. **ADD** supply-side processing as a separate, independent module
+
+## 📋 **STEP-BY-STEP REVERT INSTRUCTIONS**
+
+### **Step 1: Identify Last Working Version**
+- Find the version that produced these PERFECT results:
+  - France: 90.13 ✅
+  - Total: 715.22 ✅ 
+  - Industrial: 240.70 ✅
+  - LDZ: 307.80 ✅
+  - Gas_to_Power: 166.71 ✅
+
+### **Step 2: Complete Revert**
+```python
+# REVERT ALL CHANGES that might have broken demand-side
+# Key areas to check:
+# 1. MultiTicker loading logic
+# 2. Date filtering (2017-01-01 filter may have broken validation)
+# 3. SUMIFS aggregation patterns
+# 4. Category reshuffling logic
+# 5. Netherlands complex calculations
+```
+
+### **Step 3: Restore Working Demand Pipeline**
+- Restore exact demand-side processing that was working
+- Ensure validation passes with 2016-10-03 test date
+- Maintain all existing functionality:
+  - Bloomberg category reshuffling ✅
+  - Netherlands complex calculations ✅
+  - Industrial/Power splitting ✅
+  - MultiTicker generation ✅
+
+### **Step 4: Create Separate Supply Module**
+```python
+# NEW: Create independent supply-side processor
+def process_supply_side_separately():
+    """
+    Independent supply-side processing that doesn't interfere with demand
+    """
+    # Load the working demand results
+    demand_df = pd.read_csv('temp_demand_results.csv')
+    
+    # Process supply routes separately using MultiTicker
+    supply_df = process_all_supply_routes(multiticker_data)
+    
+    # Merge only at the end
+    final_df = demand_df.merge(supply_df, on='Date', how='left')
+    
+    return final_df
+```
+
+## 🔧 **TECHNICAL REQUIREMENTS**
+
+### **Demand-Side (MUST WORK PERFECTLY)**
+```python
+# These MUST produce exact matches:
+validation_targets = {
+    'Date': '2016-10-03',
+    'France': 90.13,
+    'Total': 715.22, 
+    'Industrial': 240.70,
+    'LDZ': 307.80,
+    'Gas_to_Power': 166.71
+}
+
+# Validation must pass with 0.01 tolerance
+assert abs(result['France'] - 90.13) < 0.01
+assert abs(result['Total'] - 715.22) < 0.01
+# etc.
+```
+
+### **Supply-Side (New, Independent Module)**
+```python
+# Extract these 20 supply routes from MultiTicker:
+supply_routes = [
+    'Slovakia_Austria',           # Excel Column R
+    'Russia_NordStream_Germany',  # Excel Column S ✅ (already working)
+    'Norway_Europe',              # Excel Column T ✅ (already working) 
+    'Netherlands_Production',     # Excel Column U
+    'GB_Production',              # Excel Column V
+    'LNG_Total',                  # Excel Column W
+    'Algeria_Italy',              # Excel Column X
+    'Libya_Italy',               # Excel Column Y
+    'Spain_France',              # Excel Column Z
+    'Denmark_Germany',           # Excel Column AA
+    'Czech_Poland_Germany',      # Excel Column AB
+    'Austria_Hungary_Export',    # Excel Column AC
+    'Slovenia_Austria',          # Excel Column AD
+    'MAB_Austria',               # Excel Column AE
+    'TAP_Italy',                 # Excel Column AF
+    'Austria_Production',        # Excel Column AG
+    'Italy_Production',          # Excel Column AH
+    'Germany_Production',        # Excel Column AI
+    'Other_Border_Net_Flows',    # Excel Column AK
+    'North_Africa_Imports',      # Excel Column AL
+    'Other_Production'           # Excel Column AM
+]
+```
+
+## 🎯 **SUCCESS CRITERIA**
+
+### **Phase 1: Revert Success**
+- [ ] Demand-side validation passes perfectly (all ✅)
+- [ ] France: 90.13 (exact match)
+- [ ] Total: 715.22 (exact match)
+- [ ] Industrial: 240.70 (exact match)  
+- [ ] LDZ: 307.80 (exact match)
+- [ ] Gas_to_Power: 166.71 (exact match)
+- [ ] MultiTicker generation works
+- [ ] Category reshuffling preserved
+
+### **Phase 2: Supply Addition Success**
+- [ ] Supply-side processing independent of demand
+- [ ] No interference with working demand logic
+- [ ] All 20 supply routes extracted from MultiTicker
+- [ ] Russia post-2023 geopolitical correction applied
+- [ ] Total_Supply calculated correctly
+
+## 🚧 **SAFETY MEASURES**
+
+### **Demand-Side Protection**
+```python
+# NEVER modify these working components:
+# 1. MultiTicker loading for demand
+# 2. SUMIFS patterns for demand aggregation  
+# 3. Category reshuffling logic
+# 4. Netherlands complex calculations
+# 5. Date filtering for validation (keep 2016-10-03)
+```
+
+### **Supply-Side Isolation**
+```python
+# Process supply in separate function/module
+# Only merge with demand at final output stage
+# Use separate MultiTicker loading if needed
+# Test supply independently before integration
+```
+
+## 📁 **OUTPUT STRUCTURE**
+```
+Working Outputs:
+├── temp_demand_results.csv              # ✅ Working demand (restore this)
+├── reshuffling_audit_trail.csv          # ✅ Working audit trail  
+├── multiticker_gas_data.xlsx            # ✅ Working MultiTicker
+├── supply_routes_separate.csv           # 🆕 New supply-only output
+└── complete_gas_market_analysis.csv     # 🆕 Final merged output
+```
+
+## ⚠️ **CRITICAL WARNINGS**
+
+1. **DO NOT** modify any demand-side logic that was working
+2. **DO NOT** change date filtering for demand validation  
+3. **DO NOT** alter MultiTicker structure for demand processing
+4. **TEST** demand-side validation FIRST before adding supply
+5. **ISOLATE** supply processing completely from demand logic
+
+## 🔄 **IMPLEMENTATION SEQUENCE**
+
+1. **REVERT** to last working demand-side version
+2. **VALIDATE** demand-side works perfectly (Phase 1)
+3. **CREATE** separate supply processor (Phase 2) 
+4. **TEST** supply independently
+5. **MERGE** only after both work separately
+6. **VALIDATE** final integrated output
+
+## 📝 **COMMIT MESSAGE**
+```
+REVERT: Restore perfect demand-side processing + separate supply module
+
+- Revert broken demand logic (France 90.13✅, Total 715.22✅)  
+- Preserve working category reshuffling & Netherlands calculations
+- Add independent supply-side processor for 20 routes
+- Maintain MultiTicker generation & validation standards
+```
+
+---
+**🎯 PRIORITY**: Get demand-side working perfectly first, then add supply separately. Never risk breaking the working demand logic again!
