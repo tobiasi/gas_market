@@ -1,0 +1,20 @@
+2025-08-19 10:05:20,924 - INFO - ================================================================================
+2025-08-19 10:05:20,924 - INFO - 🚀 EUROPEAN GAS MARKET ANALYSIS
+2025-08-19 10:05:20,925 - INFO - ================================================================================
+2025-08-19 10:05:20,926 - INFO - Using validated demand & supply processing systems
+2025-08-19 10:05:20,926 - INFO - Analysis time: 2025-08-19 10:05:20
+2025-08-19 10:05:20,927 - INFO - 🏭 Running validated demand-side processing...
+2025-08-19 10:05:21,171 - ERROR - ❌ Demand-side processing failed
+2025-08-19 10:05:21,172 - ERROR - C:\development\bin\WPy64-31050\python-3.10.5.amd64\python.exe: can't open file '\\\\dnbnor\\dfsroot\\Department\\4382\\Commodity Research\\Gas\\data\\restored_demand_pipeline.py': [Errno 2] No such file or directory
+
+2025-08-19 10:05:21,173 - INFO - 🛢️ Running validated supply-side processing...
+2025-08-19 10:05:21,303 - ERROR - ❌ Supply-side processing failed
+2025-08-19 10:05:21,304 - ERROR - C:\development\bin\WPy64-31050\python-3.10.5.amd64\python.exe: can't open file '\\\\dnbnor\\dfsroot\\Department\\4382\\Commodity Research\\Gas\\data\\livesheet_supply_complete.py': [Errno 2] No such file or directory
+
+2025-08-19 10:05:21,305 - INFO - 🔗 Combining demand and supply results...
+2025-08-19 10:05:21,305 - ERROR - ❌ Cannot combine - missing demand or supply results
+2025-08-19 10:05:21,306 - INFO - 💾 Exporting results to files...
+2025-08-19 10:05:21,306 - INFO - 
+================================================================================
+2025-08-19 10:05:21,307 - INFO - ❌ ANALYSIS INCOMPLETE - Check errors above
+2025-08-19 10:05:21,307 - INFO - ================================================================================
