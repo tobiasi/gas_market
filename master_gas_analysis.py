@@ -21,7 +21,12 @@ from datetime import datetime
 from pathlib import Path
 
 # Add current directory to Python path for local imports
-current_dir = Path(__file__).parent.absolute()
+try:
+    current_dir = Path(__file__).parent.absolute()
+except NameError:
+    # Handle case when __file__ is not defined (e.g., in Jupyter notebook)
+    current_dir = Path.cwd()
+    
 sys.path.insert(0, str(current_dir))
 
 # Configure comprehensive logging

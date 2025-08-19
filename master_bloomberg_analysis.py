@@ -25,8 +25,13 @@ from pathlib import Path
 import warnings
 warnings.filterwarnings('ignore')
 
-# Add current directory to Python path
-current_dir = Path(__file__).parent.absolute()
+# Add current directory to Python path (handle both script and interactive execution)
+try:
+    current_dir = Path(__file__).parent.absolute()
+except NameError:
+    # Handle case when __file__ is not defined (e.g., in Jupyter notebook)
+    current_dir = Path.cwd()
+    
 sys.path.insert(0, str(current_dir))
 
 # Configure comprehensive logging
